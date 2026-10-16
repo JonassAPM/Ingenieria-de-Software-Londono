@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguimiento | Grúas Londoño</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <style>
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: system-ui, -apple-system, 'Inter', 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+
+    .tracking-main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    .tracking-card {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tracking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tracking-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .tracking-progress {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 16px 0;
+    }
+
+    .progress-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+      min-width: 90px;
+    }
+
+    .step-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-subtle);
+      font-weight: 700;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .step.active .step-circle {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0f172a;
+    }
+
+    .step-label {
+      font-size: 0.8rem;
+      text-align: center;
+      max-width: 100px;
+    }
+
+    .tracking-details {
+      display: grid;
+      gap: 8px;
+    }
+
+    .tracking-details p {
+      margin: 0;
+      color: var(--text-secondary);
+    }
+
+    .tracking-cancelada {
+      color: var(--danger);
+      font-weight: 600;
+      text-align: center;
+      padding: 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-icon">GL</span>
+        <span>Grúas Londoño</span>
+      </a>
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a>
+        <a href="tracking.html">Seguimiento</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="tracking-main">
+    <section class="section-header">
+      <h1>Consulta pública de radicado</h1>
+      <p>Ingresa el número de radicado y el documento para ver el estado en tiempo real.</p>
+    </section>
+
+    <form id="tracking-form" class="card form-grid">
+      <div class="form-group">
+        <label for="tracking-radicado">Número de radicado</label>
+        <input type="text" id="tracking-radicado" placeholder="GL-2026-00123" required />
+      </div>
+      <div class="form-group">
+        <label for="tracking-documento">Cédula / NIT</label>
+        <input type="text" id="tracking-documento" placeholder="900123456-1" required />
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Consultar</button>
+      </div>
+    </form>
+
+    <div id="tracking-result" class="hidden"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© 2026 Grúas Londoño</span>
+      <span>Emergencias: 310 123 4567</span>
+    </div>
+  </footer>
+
+  <!-- Firebase SDKs (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- Utilidades -->
+  <script src="js/utils/formatters.js"></script>
+  <script src="js/utils/notifications.js"></script>
+
+  <!-- Microservicio de radicación (incluye seguimiento) -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/services/radicacion/radicacion.model.js"></script>
+  <script src="js/services/radicacion/radicacion.view.js"></script>
+  <script src="js/services/radicacion/radicacion.controller.js"></script>
+
+  <!-- Orquestador -->
+  <script src="js/app.js"></script>
+</body>
+</html>

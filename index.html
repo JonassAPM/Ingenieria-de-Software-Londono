@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    if (sessionStorage.getItem('gl_nav_returning_to_portal') === 'true') {
+      document.documentElement.classList.add('is-portal-entering-from-auth');
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Grúas Londoño - Asistencia vial, rescate y transporte de carga pesada en Colombia con cotización algorítmica normada SICETAC." />
+  <title>Grúas Londoño | Auxilio Vial, Carga Pesada y Tarifas SICETAC</title>
+
+  <!-- Fuentes tipográficas Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&family=JetBrains+Mono:wght@500;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Estilos Centralizados MVC -->
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+</head>
+
+<body>
+
+  <!-- Contenedor accesible para toasts -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Barra de navegación principal -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand" aria-label="Grúas Londoño - Soluciones Industriales">
+        <img src="assets/img/logo-gruas-londono.jpg" alt="Grúas Londoño - Soluciones Industriales"
+          class="brand-logo-img" />
+      </a>
+
+      <!-- Navegación de escritorio y móvil -->
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#inicio" aria-current="page" class="active">Inicio</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#cotizador">Cotizador</a>
+        <a href="#radicacion">Radicar</a>
+        <a href="pages/tracking.html">Seguimiento</a>
+        <a href="pages/dashboard.html" style="display: none;">Mesa de Control</a>
+        <a href="pages/conductor.html" style="display: none;">Modo Conductor</a>
+      </nav>
+
+      <!-- Indicador de sesión y acciones -->
+      <div class="nav-actions">
+        <div id="auth-user-indicator" class="auth-indicator hidden"></div>
+        <a href="login.html" id="btn-open-auth" class="btn btn-secondary btn-sm">Iniciar sesión</a>
+        <a href="registro.html" class="btn btn-primary btn-sm">Crear cuenta</a>
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. Hero Principal -->
+    <section id="inicio" class="hero">
+      <div class="hero-pattern"></div>
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <span class="red-accent-bar"></span>
+          <div class="hero-pill">
+            <span class="live-dot"></span>
+            <span>Despacho Operativo 24 Horas · Flota Link-Belt y Plataformas Hidráulicas</span>
+          </div>
+
+          <h1>
+            Más que un servicio,<br /><span style="color:#FFFFFF; font-weight:800;">una alianza para tus
+              proyectos.</span>
+          </h1>
+
+          <p class="hero-lead">
+            Elimina la incertidumbre de precios y demoras. Radica tu auxilio vial o transporte industrial con
+            liquidación algorítmica transparente bajo la normativa oficial SICETAC del Ministerio de Transporte.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#radicacion" class="btn btn-primary btn-lg">
+              <span>Solicitar Grúa Ahora</span>
+              <svg class="icon icon-sm" viewBox="0 0 24 24">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+            <a href="pages/tracking.html" class="btn btn-outline-light btn-lg">
+              <svg class="icon" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <span>Consultar por Radicado</span>
+            </a>
+          </div>
+
+          <dl class="hero-stats">
+            <div>
+              <dt>Seguridad Certificada</dt>
+              <dd>En cada operación</dd>
+            </div>
+            <div>
+              <dt>Flota Especializada</dt>
+              <dd>Para cada necesidad</dd>
+            </div>
+            <div>
+              <dt>Grandes Proyectos</dt>
+              <dd>Experiencia vial</dd>
+            </div>
+            <div>
+              <dt>Cobertura Total</dt>
+              <dd>En todo el país</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="hero-visual">
+          <figure class="hero-figure">
+            <img src="assets/img/hero-grua-ilustracion.jpg"
+              alt="Ilustración minimalista de grúa de plataforma remolcando vehículo" width="640" height="480"
+              loading="eager" />
+          </figure>
+
+          <div class="hero-float hero-float-top">
+            <div class="hero-float-icon">
+              <svg class="icon" viewBox="0 0 24 24">
+                <rect x="1" y="3" width="15" height="13" />
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                <circle cx="5.5" cy="18.5" r="2.5" />
+                <circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+            </div>
+            <div>
+              <small>Grúa en Camino</small>
+              <strong>Tiempo estimado: 18 min</strong>
+            </div>
+          </div>
+
+          <div class="hero-float hero-float-bottom">
+            <div class="hero-float-icon">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <div>
+              <small>Tarifa Transparente</small>
+              <strong>Cero cobros discrecionales</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Servicios Especializados -->
+    <section id="servicios" class="section container">
+      <div class="section-header centered">
+        <span class="eyebrow">Flota Especializada</span>
+        <h2>Soluciones de auxilio vial y remolque pesado</h2>
+        <p>Unidades certificadas, operadores con capacitación en sujeción técnica y pólizas de transporte vigentes.</p>
+      </div>
+
+      <div class="services-grid">
+        <article class="card card-interactive service-card">
+          <span class="badge service-tag">Hasta 5 Toneladas</span>
+          <div class="service-icon">
+            <svg class="icon icon-lg" viewBox="0 0 24 24">
+              <rect x="1" y="3" width="15" height="13" />
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <h3>Grúa de Plataforma Hidráulica</h3>
+          <p>Ideal para camionetas 4x4, vehículos automáticos de baja altura y automóviles que requieren planchón
+            completo sin rodadura forzada.</p>
+          <ul class="service-features">
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Winche eléctrico de 12.000 lbs</li>
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Cero desgaste en transmisión</li>
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Patines de rescate para ruedas trabadas</li>
+          </ul>
+        </article>
+
+        <article class="card card-interactive service-card">
+          <span class="badge service-tag">Hasta 15 Toneladas</span>
+          <div class="service-icon">
+            <svg class="icon icon-lg" viewBox="0 0 24 24">
+              <path d="M10 2h4m-2 0v8m-6 4 6-4 6 4M4 14v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6" />
+            </svg>
+          </div>
+          <h3>Grúa de Pluma y Gancho Pesado</h3>
+          <p>Diseñada para rescate de camiones medianos, vehículos volcados en cunetas, zanjas o abismos y zonas de
+            difícil acceso geométrico.</p>
+          <ul class="service-features">
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Brazo articulado telescópico</li>
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Rescate en desniveles viales</li>
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Estabilizadores hidráulicos de chasis</li>
+          </ul>
+        </article>
+
+        <article class="card card-interactive service-card">
+          <span class="badge service-tag">Hasta 35 Toneladas</span>
+          <div class="service-icon">
+            <svg class="icon icon-lg" viewBox="0 0 24 24">
+              <rect x="1" y="6" width="18" height="10" rx="2" />
+              <circle cx="7" cy="18" r="2" />
+              <circle cx="17" cy="18" r="2" />
+            </svg>
+          </div>
+          <h3>Cama Baja y Carga Sobredimensionada</h3>
+          <p>Transporte especializado para maquinaria amarilla (retroexcavadoras, motoniveladoras), tractomulas y
+            transformadores industriales.</p>
+          <ul class="service-features">
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Cuello desmontable para cargue frontal</li>
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Permisos de ruta ante INVIAS</li>
+            <li><svg class="icon icon-sm" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg> Vehículos escolta con señalización</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. Cómo Funciona -->
+    <section class="section steps-section">
+      <div class="container">
+        <div class="section-header centered">
+          <span class="eyebrow">Flujo Transparente</span>
+          <h2>Cómo funciona el despacho en 4 pasos</h2>
+          <p>Desde la liquidación inicial hasta la entrega final de tu vehículo en destino.</p>
+        </div>
+
+        <ol class="steps-grid">
+          <li class="step-card">
+            <h3>1. Cotiza y Radica</h3>
+            <p>Ingresa los datos del vehículo y la ruta para obtener el valor normado y generar tu radicado oficial
+              GL-2026.</p>
+          </li>
+          <li class="step-card">
+            <h3>2. Asignación Óptima</h3>
+            <p>La mesa de control asigna la grúa adecuada verificando que su capacidad de tonelaje soporte tu vehículo.
+            </p>
+          </li>
+          <li class="step-card">
+            <h3>3. Monitoreo en Vivo</h3>
+            <p>Sigue el avance en tiempo real: cuando la grúa sale a ruta, cuando arriba a sitio y cuando asegura la
+              carga.</p>
+          </li>
+          <li class="step-card">
+            <h3>4. Entrega y Comprobante</h3>
+            <p>Descarga tu factura y comprobante PDF oficial con la bitácora íntegra de la operación vial.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 4. Cotizador Interactivo SICETAC -->
+    <section id="cotizador" class="section container">
+      <div class="section-header">
+        <span class="eyebrow">Liquidación Oficial</span>
+        <h2>Cotizador algorítmico SICETAC</h2>
+        <p>Calcula al instante el costo exacto de tu servicio de grúa conforme a las tablas vigentes del Ministerio de
+          Transporte.</p>
+      </div>
+
+      <div class="cotizador-layout">
+        <!-- Formulario del cotizador -->
+        <form id="cotizador-form" class="card card-interactive">
+          <div class="card-title">
+            <div class="card-title-icon">
+              <svg class="icon" viewBox="0 0 24 24">
+                <rect x="4" y="2" width="16" height="20" rx="2" />
+                <line x1="8" y1="6" x2="16" y2="6" />
+                <line x1="16" y1="14" x2="16" y2="18" />
+                <path d="M16 10h.01" />
+                <path d="M12 10h.01" />
+                <path d="M8 10h.01" />
+                <path d="M12 14h.01" />
+                <path d="M8 14h.01" />
+                <path d="M12 18h.01" />
+                <path d="M8 18h.01" />
+              </svg>
+            </div>
+            <div>
+              <h3>Parámetros de Liquidación</h3>
+              <p>Valores regulados para enganche, distancia y topografía</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="tipo-enganche">Tipo de enganche <span class="req">*</span></label>
+              <select id="tipo-enganche" class="input" required>
+                <option value="urbano">Urbano (Base: $100.000 COP)</option>
+                <option value="carretera">Carretera Nacional (Base: $150.000 COP)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="distancia-km">Distancia estimada <span class="req">*</span></label>
+              <div class="input-group">
+                <input type="number" id="distancia-km" class="input" min="1" max="1500" step="0.5" value="25"
+                  required />
+                <span class="input-addon">km</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="topografia">Topografía de la vía <span class="req">*</span></label>
+              <select id="topografia" class="input" required>
+                <option value="plano">Plano ($3.500 / km)</option>
+                <option value="ondulado">Ondulado ($4.200 / km + $15.000)</option>
+                <option value="montana">Montañoso ($5.000 / km + $30.000)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="peso-toneladas">Peso estimado del vehículo <span class="req">*</span></label>
+              <div class="input-group">
+                <input type="number" id="peso-toneladas" class="input" min="0.5" max="45" step="0.1" value="2.5"
+                  required />
+                <span class="input-addon">Ton</span>
+              </div>
+              <small class="field-help">Automóvil: 1.2t - Camioneta: 2.5t - Camión: 8t+</small>
+            </div>
+
+            <div class="field field-full">
+              <label for="valor-comercial">Valor comercial declarado del vehículo <span class="req">*</span></label>
+              <div class="input-group addon-left">
+                <span class="input-addon">$</span>
+                <input type="number" id="valor-comercial" class="input" min="5000000" step="1000000" value="70000000"
+                  required />
+              </div>
+              <small class="field-help">Aplica 0.2% obligatorio de póliza para cobertura contra todo riesgo en
+                tránsito</small>
+            </div>
+
+            <div class="field field-full">
+              <label for="falla-mecanica">Condición mecánica especial (opcional)</label>
+              <input type="text" id="falla-mecanica" class="input"
+                placeholder="Ej: Dirección trabada, sin llaves, volcamiento..." />
+            </div>
+
+            <div class="field field-full">
+              <button type="submit" class="btn btn-primary btn-block">
+                <svg class="icon" viewBox="0 0 24 24">
+                  <path d="m5 12 7-7 7 7" />
+                  <path d="M12 19V5" />
+                </svg>
+                Proceder a Radicar con esta Cotización
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Factura desglosada lateral -->
+        <aside class="invoice">
+          <div class="invoice-head">
+            <div>
+              <span class="eyebrow" style="color:var(--gl-highlight);">LIQUIDACIÓN OFICIAL</span>
+              <h3>Desglose SICETAC</h3>
+            </div>
+            <span class="badge">Resolución Vigente</span>
+          </div>
+
+          <div class="invoice-rows">
+            <div class="invoice-row">
+              <div>
+                <span>Tarifa base de enganche</span>
+                <small>Arranque y disposición de equipo</small>
+              </div>
+              <strong id="cot-base">$0</strong>
+            </div>
+
+            <div class="invoice-row">
+              <div>
+                <span>Recorrido por kilometraje</span>
+                <small>Distancia × tarifa topográfica</small>
+              </div>
+              <strong id="cot-distancia">$0</strong>
+            </div>
+
+            <div class="invoice-row">
+              <div>
+                <span>Recargo topográfico</span>
+                <small>Compensación por pendiente y desgaste</small>
+              </div>
+              <strong id="cot-topografia">$0</strong>
+            </div>
+
+            <div class="invoice-row">
+              <div>
+                <span>Recargo por tonelaje</span>
+                <small>Factor de peso $15.000 / Ton</small>
+              </div>
+              <strong id="cot-carga">$0</strong>
+            </div>
+
+            <div class="invoice-row">
+              <div>
+                <span>Póliza de seguro en tránsito</span>
+                <small>0.2% sobre valor comercial declarado</small>
+              </div>
+              <strong id="cot-seguro">$0</strong>
+            </div>
+          </div>
+
+          <div class="invoice-total">
+            <span>TOTAL ESTIMADO (COP):</span>
+            <strong id="cot-total">$0</strong>
+          </div>
+
+          <p class="invoice-note">
+            Tarifa exacta sin recargos ocultos. El comprobante generado al radicar tiene validez legal para empresas,
+            aseguradoras y particulares.
+          </p>
+
+          <!-- Banner Extensión 3b (Cargas sobredimensionadas) -->
+          <div id="cotizacion-aviso-revision" class="alert alert-revision hidden">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            <div class="alert-body">
+              <strong>Extensión 3b: Carga Sobredimensionada o Rescate Crítico</strong>
+              <p>Por superar 15 toneladas o presentar condición de abismo/volcado, la tarifa requiere validación de ruta
+                e infraestructura especial.</p>
+              <div class="alert-actions">
+                <a id="cotizacion-enlace-whatsapp" href="#" target="_blank" rel="noopener"
+                  class="btn btn-whatsapp btn-sm">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path
+                      d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                  </svg>
+                  Atención Asistida por WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 5. Formulario de Radicación Paso a Paso (Wizard) -->
+    <section id="radicacion" class="section radicacion-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="eyebrow">Asistencia Vial en 4 Pasos</span>
+          <h2>Radicación de solicitud y orden de despacho</h2>
+          <p>Diligencia los datos para asignar inmediatamente la unidad adecuada y expedir tu comprobante oficial en
+            PDF.</p>
+        </div>
+
+        <div class="radicacion-layout">
+          <!-- Wizard Principal -->
+          <form id="radicacion-form" class="card" novalidate>
+            <!-- Barra de pasos superior -->
+            <ol class="stepper" aria-label="Progreso de radicación">
+              <li id="stepper-step-1" class="stepper-item is-active">
+                <span class="stepper-dot">1</span>
+                <span class="stepper-label">Cliente</span>
+              </li>
+              <li id="stepper-step-2" class="stepper-item">
+                <span class="stepper-dot">2</span>
+                <span class="stepper-label">Ruta</span>
+              </li>
+              <li id="stepper-step-3" class="stepper-item">
+                <span class="stepper-dot">3</span>
+                <span class="stepper-label">Vehículo</span>
+              </li>
+              <li id="stepper-step-4" class="stepper-item">
+                <span class="stepper-dot">4</span>
+                <span class="stepper-label">Confirmación</span>
+              </li>
+            </ol>
+
+            <!-- Paso 1: Datos del Cliente -->
+            <fieldset id="wizard-paso-1" class="wizard-panel">
+              <legend>Paso 1: Información del Solicitante</legend>
+              <p class="panel-lead">Datos del titular para facturación y comunicación en ruta.</p>
+
+              <div class="form-grid">
+                <div class="field field-full">
+                  <label for="cliente-nombre">Nombre completo / Razón social <span class="req">*</span></label>
+                  <input type="text" id="cliente-nombre" class="input"
+                    placeholder="Ej: Carlos Mendoza / Transportes Andinos S.A.S." required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field">
+                  <label for="cliente-documento">Cédula de Ciudadanía o NIT <span class="req">*</span></label>
+                  <input type="text" id="cliente-documento" class="input" placeholder="Ej: 1098765432 / 900123456-1"
+                    required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field">
+                  <label for="cliente-telefono">Teléfono celular de contacto <span class="req">*</span></label>
+                  <input type="tel" id="cliente-telefono" class="input" placeholder="Ej: 3101234567" required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field field-full">
+                  <label for="cliente-correo">Correo electrónico <span class="req">*</span></label>
+                  <input type="email" id="cliente-correo" class="input" placeholder="contacto@empresa.com" required />
+                  <span class="field-error"></span>
+                  <small class="field-help">Allí se enviará la copia del comprobante de radicación.</small>
+                </div>
+              </div>
+
+              <div class="wizard-nav">
+                <span class="paso-indicador">Paso 1 de 4</span>
+                <div class="wizard-nav-right">
+                  <button type="button" class="btn btn-primary" data-step-next>Continuar a Ruta →</button>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Paso 2: Datos del Servicio y Ruta -->
+            <fieldset id="wizard-paso-2" class="wizard-panel hidden">
+              <legend>Paso 2: Detalles de la Ruta y Servicio</legend>
+              <p class="panel-lead">Puntos de enganche y destino del remolque.</p>
+
+              <div class="form-grid">
+                <div class="field field-full">
+                  <label for="servicio-tipo">Tipo de grúa requerido <span class="req">*</span></label>
+                  <select id="servicio-tipo" class="input" required>
+                    <option value="GRUA_PLATAFORMA">Grúa de Plataforma (Hasta 5 Ton)</option>
+                    <option value="GRUA_PLUMA">Grúa de Pluma/Gancho de Rescate (Hasta 15 Ton)</option>
+                    <option value="CAMA_BAJA">Cama Baja para Carga Pesada (Hasta 35 Ton)</option>
+                  </select>
+                </div>
+
+                <div class="field field-full">
+                  <label for="servicio-origen">Dirección o punto exacto de origen <span class="req">*</span></label>
+                  <input type="text" id="servicio-origen" class="input"
+                    placeholder="Ej: Calle 15 # 8-20, Aguachica / Km 24 Vía Central" required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field field-full">
+                  <label for="servicio-destino">Dirección exacta de destino <span class="req">*</span></label>
+                  <input type="text" id="servicio-destino" class="input"
+                    placeholder="Ej: Taller Central / Km 42 Vía San Alberto" required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field field-full">
+                  <label for="servicio-referencia">Punto de referencia visual (opcional)</label>
+                  <input type="text" id="servicio-referencia" class="input"
+                    placeholder="Frente a bomba Terpel, aviso azul..." />
+                </div>
+
+                <div class="field">
+                  <label for="servicio-distancia">Distancia estimada (km) <span class="req">*</span></label>
+                  <input type="number" id="servicio-distancia" class="input" min="1" step="0.5" value="25" required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field">
+                  <label for="servicio-topografia">Topografía <span class="req">*</span></label>
+                  <select id="servicio-topografia" class="input" required>
+                    <option value="plano">Plano</option>
+                    <option value="ondulado">Ondulado</option>
+                    <option value="montana">Montañoso</option>
+                  </select>
+                </div>
+
+                <div class="field field-full">
+                  <label for="servicio-enganche">Entorno de enganche <span class="req">*</span></label>
+                  <select id="servicio-enganche" class="input" required>
+                    <option value="urbano">Urbano (Perímetro de ciudad)</option>
+                    <option value="carretera">Carretera Nacional</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="wizard-nav">
+                <button type="button" class="btn btn-ghost" data-step-prev>← Volver</button>
+                <div class="wizard-nav-right">
+                  <button type="button" class="btn btn-primary" data-step-next>Continuar a Vehículo →</button>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Paso 3: Datos del Vehículo -->
+            <fieldset id="wizard-paso-3" class="wizard-panel hidden">
+              <legend>Paso 3: Datos del Vehículo Siniestrado</legend>
+              <p class="panel-lead">La regla física RN-04 exige que la grúa asignada soporte exactamente el tonelaje del
+                vehículo.</p>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="vehiculo-placa">Placa del vehículo <span class="req">*</span></label>
+                  <input type="text" id="vehiculo-placa" class="input mono" placeholder="XYZ-789" maxlength="8"
+                    required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field">
+                  <label for="vehiculo-tipo">Tipo o modelo de vehículo <span class="req">*</span></label>
+                  <input type="text" id="vehiculo-tipo" class="input" placeholder="Ej: Camioneta Toyota Hilux"
+                    required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field">
+                  <label for="vehiculo-traccion">Tracción motriz <span class="req">*</span></label>
+                  <select id="vehiculo-traccion" class="input" required>
+                    <option value="4x2">Tracción Simple (4x2)</option>
+                    <option value="4x4">Doble Tracción (4x4) - Requiere Plataforma</option>
+                    <option value="pesado">Ejes Múltiples (Camión / Maquinaria)</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="vehiculo-transmision">Transmisión <span class="req">*</span></label>
+                  <select id="vehiculo-transmision" class="input" required>
+                    <option value="manual">Manual (Mecánica)</option>
+                    <option value="automatica">Automática / Secuencial</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="vehiculo-peso">Peso estimado (Toneladas) <span class="req">*</span></label>
+                  <input type="number" id="vehiculo-peso" class="input" min="0.5" max="45" step="0.1" value="2.5"
+                    required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field">
+                  <label for="vehiculo-valor">Valor comercial declarado (COP) <span class="req">*</span></label>
+                  <input type="number" id="vehiculo-valor" class="input" min="5000000" step="1000000" value="70000000"
+                    required />
+                  <span class="field-error"></span>
+                </div>
+
+                <div class="field field-full">
+                  <label for="vehiculo-falla">Condición mecánica o avería</label>
+                  <input type="text" id="vehiculo-falla" class="input"
+                    placeholder="Ej: Dirección trabada, sin llaves, sin frenos..." />
+                </div>
+              </div>
+
+              <div class="wizard-nav">
+                <button type="button" class="btn btn-ghost" data-step-prev>← Volver</button>
+                <div class="wizard-nav-right">
+                  <button type="button" class="btn btn-primary" data-step-next>Continuar a Confirmación →</button>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Paso 4: Medio de Pago y Confirmación -->
+            <fieldset id="wizard-paso-4" class="wizard-panel hidden">
+              <legend>Paso 4: Medio de Pago y Radicación</legend>
+              <p class="panel-lead">Selecciona tu método de pago según la regla RN-03.</p>
+
+              <div class="option-cards" style="margin-bottom: 24px;">
+                <label class="option-card">
+                  <input type="radio" name="medio-pago" value="TRANSFERENCIA" checked />
+                  <div class="option-card-body">
+                    <div class="option-card-icon">
+                      <svg class="icon" viewBox="0 0 24 24">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                        <line x1="1" y1="10" x2="23" y2="10" />
+                      </svg>
+                    </div>
+                    <div>
+                      <strong>Transferencia Bancaria / PSE</strong>
+                      <small>Bancolombia, Davivienda, Nequi o Daviplata</small>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="option-card">
+                  <input type="radio" name="medio-pago" value="EFECTIVO" />
+                  <div class="option-card-body">
+                    <div class="option-card-icon">
+                      <svg class="icon" viewBox="0 0 24 24">
+                        <line x1="12" y1="1" x2="12" y2="23" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      </svg>
+                    </div>
+                    <div>
+                      <strong>Efectivo al Operador</strong>
+                      <small>Pago en sitio al arribar la unidad de rescate</small>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div class="alert alert-warning" style="margin-bottom: 24px;">
+                <svg class="icon" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <div class="alert-body">
+                  <strong>Política de Despacho (Regla RN-04)</strong>
+                  <p>Al confirmar, se reservará una grúa en el tablero de control. Si se cancela el servicio una vez la
+                    unidad esté «En Camino», se cobrará el valor de enganche base.</p>
+                </div>
+              </div>
+
+              <div class="wizard-nav">
+                <button type="button" class="btn btn-ghost" data-step-prev>← Modificar Datos</button>
+                <div class="wizard-nav-right">
+                  <button type="submit" class="btn btn-primary btn-lg">
+                    <svg class="icon" viewBox="0 0 24 24">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Confirmar y Radicar Solicitud
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+
+          <!-- Tarjeta Lateral de Resumen Reactivo -->
+          <aside class="summary card">
+            <div class="summary-head">
+              <h3>Resumen de la Orden</h3>
+              <span class="badge">En Proceso</span>
+            </div>
+
+            <div class="summary-group">
+              <h4>Cliente Solicitante</h4>
+              <div class="summary-row">
+                <dt>Nombre:</dt>
+                <dd id="sum-cliente-nombre" class="vacio">—</dd>
+              </div>
+              <div class="summary-row">
+                <dt>Documento:</dt>
+                <dd id="sum-cliente-doc" class="vacio">—</dd>
+              </div>
+            </div>
+
+            <div class="summary-group">
+              <h4>Ruta &amp; Recorrido</h4>
+              <div class="summary-row">
+                <dt>Trayecto:</dt>
+                <dd id="sum-servicio-ruta" class="vacio">—</dd>
+              </div>
+              <div class="summary-row">
+                <dt>Distancia:</dt>
+                <dd id="sum-servicio-distancia" class="vacio">—</dd>
+              </div>
+            </div>
+
+            <div class="summary-group">
+              <h4>Vehículo</h4>
+              <div class="summary-row">
+                <dt>Placa:</dt>
+                <dd id="sum-vehiculo-placa" class="vacio mono">—</dd>
+              </div>
+              <div class="summary-row">
+                <dt>Especificación:</dt>
+                <dd id="sum-vehiculo-datos" class="vacio">—</dd>
+              </div>
+            </div>
+
+            <div class="summary-total">
+              <div>
+                <span>Tarifa Total SICETAC</span>
+                <strong id="sum-total">$0</strong>
+              </div>
+              <svg class="icon icon-lg" viewBox="0 0 24 24">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pie de página institucional -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="index.html" class="brand">
+          <span class="brand-mark">GL</span>
+          <div class="brand-text">
+            <strong>Grúas Londoño</strong>
+            <small>Líder en Auxilio Vial Colombiano</small>
+          </div>
+        </a>
+        <p>Servicio de grúas de plataforma, pluma y cama baja bajo estándares de seguridad vial y regulación oficial
+          SICETAC.</p>
+      </div>
+
+      <div>
+        <h4>Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="#servicios">Servicios de Grúa</a></li>
+          <li><a href="#cotizador">Cotizador en Línea</a></li>
+          <li><a href="#radicacion">Radicar Asistencia</a></li>
+          <li><a href="pages/tracking.html">Consulta de Radicado</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Operación Interna</h4>
+        <ul>
+          <li><a href="pages/dashboard.html">Mesa de Control (Despacho)</a></li>
+          <li><a href="pages/conductor.html">Portal Conductor</a></li>
+          <li><a href="login.html" style="color:inherit;">Iniciar Sesión</a></li>
+          <li><a href="registro.html" style="color:inherit;">Crear Cuenta</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Líneas de Atención</h4>
+        <ul>
+          <li><strong>Emergencias 24/7:</strong> 310 123 4567</li>
+          <li><strong>PBX Bucaramanga:</strong> (607) 698 1234</li>
+          <li><strong>Aguachica (Cesar):</strong> (605) 565 4321</li>
+          <li><strong>Soporte Legal SICETAC:</strong> MinTransporte</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© 2026 Grúas Londoño S.A.S. Todos los derechos reservados.</span>
+      <span>Arquitectura MVC Pura · Vanilla JS &amp; Firebase</span>
+    </div>
+  </footer>
+
+  <!-- Modal de Éxito al Radicar -->
+  <div id="modal-radicacion-exitosa" class="modal-overlay hidden" role="dialog" aria-modal="true"
+    aria-labelledby="exito-titulo">
+    <div class="modal">
+      <div class="success-icon">
+        <svg class="icon" viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+      <div class="success-body">
+        <span class="badge badge-plain"
+          style="background:var(--gl-success-soft); color:var(--gl-success-text); margin-bottom:8px;">RADICACIÓN
+          EXITOSA</span>
+        <h2 id="exito-titulo">¡Tu grúa está siendo gestionada!</h2>
+        <p>Tu solicitud ha ingresado a la mesa de control de despacho en tiempo real.</p>
+
+        <div class="radicado-display">
+          <small>Número de Radicado Oficial</small>
+          <strong id="exito-radicado">GL-2026-00000</strong>
+        </div>
+
+        <p class="text-muted" style="font-size:0.85rem;">
+          Guarda este radicado para consultar el estado del traslado. Tu comprobante PDF con la liquidación SICETAC ha
+          comenzado a descargarse automáticamente.
+        </p>
+
+        <div class="success-actions">
+          <button id="btn-descargar-pdf-exito" class="btn btn-primary btn-block">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Volver a Descargar Comprobante PDF
+          </button>
+          <button id="btn-ir-seguimiento-exito" class="btn btn-secondary btn-block">
+            <svg class="icon" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            Hacer Seguimiento en Vivo
+          </button>
+          <button type="button" class="btn btn-ghost btn-block" data-close-exito>
+            Cerrar Ventana
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- CDN Firebase compat oficial -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- CDN jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Capa MVC 1: Configuración & Utilidades -->
+  <script src="js/config/firebase-config.js"></script>
+  <script src="js/utils/formatters.js"></script>
+  <script src="js/utils/notifications.js"></script>
+  <script src="js/utils/pdf-generator.js"></script>
+
+  <!-- Capa MVC 2: Modelos -->
+  <script src="js/models/user.model.js"></script>
+  <script src="js/models/auth.model.js"></script>
+  <script src="js/models/cotizacion.model.js"></script>
+  <script src="js/models/radicacion.model.js"></script>
+  <script src="js/models/despacho.model.js"></script>
+
+  <!-- Capa MVC 3: Vistas -->
+  <script src="js/views/auth.view.js"></script>
+  <script src="js/views/cotizacion.view.js"></script>
+  <script src="js/views/radicacion.view.js"></script>
+
+  <!-- Capa MVC 4: Controladores -->
+  <script src="js/controllers/auth.controller.js"></script>
+  <script src="js/controllers/cotizacion.controller.js"></script>
+  <script src="js/controllers/radicacion.controller.js"></script>
+
+  <!-- Orquestador Principal -->
+  <script src="js/app.js"></script>
+  <script>
+    try { sessionStorage.removeItem('gl_nav_returning_to_portal'); } catch (_) {}
+  </script>
+</body>
+
+</html>

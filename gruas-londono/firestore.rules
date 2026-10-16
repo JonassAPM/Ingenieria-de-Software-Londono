@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Funciones auxiliares
+    function estaAutenticado() {
+      return request.auth != null;
+    }
+
+    function datosUsuario() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+
+    function rolUsuario() {
+      return estaAutenticado() ? datosUsuario().rol : null;
+    }
+
+    function esAdmin() {
+      return estaAutenticado() && rolUsuario() == 'ADMINISTRADOR';
+    }
+
+    function esOperador() {
+      return estaAutenticado() && rolUsuario() == 'OPERADOR';
+    }
+
+    function esOperadorOAdmin() {
+      return esOperador() || esAdmin();
+    }
+
+    function esCliente() {
+      return estaAutenticado() && rolUsuario() == 'CLIENTE';
+    }
+
+    function esConductor() {
+      return estaAutenticado() && rolUsuario() == 'CONDUCTOR';
+    }
+
+    function puedeLeerSolicitud(solicitud) {
+      return esOperadorOAdmin()
+        || (esCliente() && solicitud.cliente.documento == datosUsuario().documento)
+        || (esConductor() && solicitud.despacho.idGrua == datosUsuario().gruaAsignada)
+        || (request.auth == null && request.query.limit == 1);
+    }
+
+    function puedeActualizarSolicitud(solicitud) {
+      return esOperadorOAdmin()
+        || (esConductor() && solicitud.despacho.idGrua == datosUsuario().gruaAsignada);
+    }
+
+    match /usuarios/{uid} {
+      allow read: if esOperadorOAdmin() || (estaAutenticado() && uid == request.auth.uid);
+      allow write: if esOperadorOAdmin() || (estaAutenticado() && uid == request.auth.uid);
+    }
+
+    match /solicitudes/{solicitudId} {
+      allow read: if puedeLeerSolicitud(resource.data);
+      allow create: if true; // Radicación pública abierta; la validación de datos ocurre en la capa de aplicación.
+      allow update: if puedeActualizarSolicitud(resource.data);
+      allow delete: if esOperadorOAdmin();
+    }
+
+    match /gruas/{gruaId} {
+      allow read: if esOperadorOAdmin() || esConductor();
+      allow write: if esOperadorOAdmin();
+    }
+
+    match /parametros_sicetac/{paramId} {
+      allow read: if estaAutenticado();
+      allow write: if esOperadorOAdmin();
+    }
+  }
+}

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    if (sessionStorage.getItem('gl_nav_returning_to_portal') === 'true') {
+      document.documentElement.classList.add('is-portal-entering-from-auth');
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consulta y Seguimiento de Radicado | Grúas Londoño</title>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos MVC Centralizados -->
+  <link rel="stylesheet" href="../assets/css/variables.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/dashboard.css" />
+</head>
+<body class="tracking-page">
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Barra de navegación -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="../index.html" class="brand" aria-label="Grúas Londoño">
+        <img src="../assets/img/logo-gruas-londono.jpg" alt="Grúas Londoño - Soluciones Industriales" class="brand-logo-img" />
+      </a>
+
+      <nav class="nav-links">
+        <a href="../index.html#inicio">Inicio</a>
+        <a href="../index.html#servicios">Servicios</a>
+        <a href="../index.html#cotizador">Cotizador</a>
+        <a href="../index.html#radicacion">Radicar</a>
+        <a href="tracking.html" aria-current="page" class="active">Seguimiento</a>
+        <a href="dashboard.html" style="display: none;">Mesa de Control</a>
+        <a href="conductor.html" style="display: none;">Modo Conductor</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="auth-user-indicator" class="auth-indicator hidden"></div>
+        <a href="../login.html" id="btn-open-auth" class="btn btn-secondary btn-sm">Iniciar sesión</a>
+        <a href="../registro.html" class="btn btn-primary btn-sm">Crear cuenta</a>
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Header del Módulo de Seguimiento (Estilo Oficial Grúas Londoño) -->
+  <section class="tracking-hero">
+    <div class="tracking-hero-pattern" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-pill" style="margin-bottom:16px;">
+        <span>Módulo Satelital SICETAC · Consulta Pública en Tiempo Real</span>
+      </div>
+      <h1>Seguimiento en Vivo <span style="color:var(--gl-primary);">del Despacho</span></h1>
+      <p>Monitorea el estado de tu servicio de remolque, verifica la unidad móvil asignada con su conductor y descarga el acta oficial regulada.</p>
+    </div>
+  </section>
+
+  <main class="container tracking-container">
+    <!-- Formulario de Consulta con Tarjeta Corporativa Elevada -->
+    <form id="tracking-form" class="tracking-search-card">
+      <div class="tracking-card-header">
+        <div class="tracking-header-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <div>
+          <h2>Rastreo de Asistencia en Ruta</h2>
+          <p>Ingresa los datos asignados al radicar tu servicio para visualizar la ubicación satelital</p>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="tracking-radicado">Número de radicado oficial <span class="req">*</span></label>
+          <div class="input-with-icon">
+            <span class="input-icon-left" style="font-family:var(--gl-font-mono); font-weight:700; color:var(--gl-text-3);">#</span>
+            <input type="text" id="tracking-radicado" class="input input-pill mono" placeholder="Ej: GL-2026-00104" required />
+          </div>
+          <small class="field-help">Código de 13 caracteres entregado en tu comprobante</small>
+        </div>
+
+        <div class="field">
+          <label for="tracking-documento">Cédula del titular o NIT <span class="req">*</span></label>
+          <div class="input-with-icon">
+            <svg class="input-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="tracking-documento" class="input input-pill" placeholder="Ej: 900123456-1 / 1098765432" required />
+          </div>
+          <small class="field-help">Por seguridad validamos coincidencia con la orden</small>
+        </div>
+
+        <div class="field field-full" style="margin-top: 8px;">
+          <button type="submit" class="btn btn-primary btn-block btn-lg">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Consultar Estado en Tiempo Real
+          </button>
+        </div>
+      </div>
+
+      <!-- Ingreso Rápido Demo para Evaluación Inmediata -->
+      <div class="tracking-quick-demo">
+        <span class="tracking-demo-label">Prueba Rápida Demo:</span>
+        <button type="button" class="tracking-chip" data-rad="GL-2026-00104" data-doc="900123456-1">
+          <span>⚡ GL-2026-00104 (Grúa Asignada)</span>
+        </button>
+        <button type="button" class="tracking-chip" data-rad="GL-2026-00105" data-doc="1098765432">
+          <span>⏳ GL-2026-00105 (En Espera)</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Contenedor Reactivo donde se renderiza la barra de progreso y datos -->
+    <div id="tracking-result" class="hidden"></div>
+
+    <!-- Beneficios y Garantías del Módulo de Rastreo Oficial -->
+    <div class="tracking-features-grid">
+      <div class="tracking-feature-card">
+        <div class="tracking-feature-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3>Monitoreo Satelital GPS</h3>
+        <p>Transmisión de coordenadas en tiempo real para visualizar el trayecto de la unidad móvil hacia el vehículo varado o siniestrado.</p>
+      </div>
+
+      <div class="tracking-feature-card">
+        <div class="tracking-feature-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Tarifa Regulada SICETAC</h3>
+        <p>Validación algorítmica conforme a los parámetros oficiales del Ministerio de Transporte, eliminando sobrecostos abusivos.</p>
+      </div>
+
+      <div class="tracking-feature-card">
+        <div class="tracking-feature-icon">
+          <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3>Comprobante Digital Oficial</h3>
+        <p>Generación y descarga inmediata del acta de servicio en formato PDF de alta resolución con trazabilidad legal y probatoria.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer Corporativo Completo y Consistente -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="../index.html" class="brand">
+          <span class="brand-mark">GL</span>
+          <div class="brand-text">
+            <strong>Grúas Londoño</strong>
+            <small>Líder en Auxilio Vial Colombiano</small>
+          </div>
+        </a>
+        <p>Servicio de grúas de plataforma, pluma y cama baja bajo estándares de seguridad vial y regulación oficial SICETAC.</p>
+      </div>
+
+      <div>
+        <h4>Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="../index.html#servicios">Servicios de Grúa</a></li>
+          <li><a href="../index.html#cotizador">Cotizador en Línea</a></li>
+          <li><a href="../index.html#radicacion">Radicar Asistencia</a></li>
+          <li><a href="tracking.html">Consulta de Radicado</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Operación Interna</h4>
+        <ul>
+          <li><a href="dashboard.html">Mesa de Control (Despacho)</a></li>
+          <li><a href="conductor.html">Portal Conductor</a></li>
+          <li><a href="../login.html">Iniciar Sesión</a></li>
+          <li><a href="../registro.html">Crear Cuenta</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Líneas de Atención</h4>
+        <ul>
+          <li><strong>Emergencias 24/7:</strong> 310 123 4567</li>
+          <li><strong>PBX Bucaramanga:</strong> (607) 698 1234</li>
+          <li><strong>Aguachica (Cesar):</strong> (605) 565 4321</li>
+          <li><strong>Soporte Legal SICETAC:</strong> MinTransporte</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© 2026 Grúas Londoño S.A.S. Todos los derechos reservados.</span>
+      <span>Arquitectura MVC Pura · Vanilla JS &amp; Firebase</span>
+    </div>
+  </footer>
+
+
+
+  <!-- CDN Firebase compat oficial -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- CDN jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Capa MVC: Config, Utils, Models, Views, Controllers -->
+  <script src="../js/config/firebase-config.js"></script>
+  <script src="../js/utils/formatters.js"></script>
+  <script src="../js/utils/notifications.js"></script>
+  <script src="../js/utils/pdf-generator.js"></script>
+
+  <script src="../js/models/user.model.js"></script>
+  <script src="../js/models/auth.model.js"></script>
+  <script src="../js/models/cotizacion.model.js"></script>
+  <script src="../js/models/radicacion.model.js"></script>
+  <script src="../js/models/despacho.model.js"></script>
+
+  <script src="../js/views/auth.view.js"></script>
+  <script src="../js/views/tracking.view.js"></script>
+
+  <script src="../js/controllers/auth.controller.js"></script>
+  <script src="../js/controllers/tracking.controller.js"></script>
+
+  <!-- Orquestador -->
+  <script src="../js/app.js"></script>
+  <script>
+    try { sessionStorage.removeItem('gl_nav_returning_to_portal'); } catch (_) {}
+  </script>
+</body>
+</html>

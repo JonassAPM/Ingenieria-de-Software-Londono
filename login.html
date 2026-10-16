@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es" class="auth-html-root">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    if (sessionStorage.getItem('gl_nav_auth_switch') === 'true') {
+      document.documentElement.classList.add('is-auth-switching');
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Iniciar sesión en Grúas Londoño - Plataforma de Asistencia Vial y Carga Pesada en Colombia." />
+  <title>Iniciar Sesión | Grúas Londoño</title>
+
+  <!-- Fuentes oficiales Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos MVC Centralizados -->
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="preload" as="image" href="assets/img/inicio-y-crear.png" />
+</head>
+<body class="auth-standalone-page">
+
+  <!-- Pantalla negra translúcida adaptativa de top a floor -->
+  <div class="auth-standalone-overlay" aria-hidden="true"></div>
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Barra de Navegación Superior -->
+  <header class="auth-standalone-nav">
+    <a href="index.html" class="brand" aria-label="Grúas Londoño - Inicio">
+      <img src="assets/img/logo-gruas-londono.jpg" alt="Grúas Londoño - Soluciones Industriales" class="brand-logo-img" />
+    </a>
+
+    <div class="nav-actions" style="display:flex; align-items:center; gap:16px;">
+      <a href="registro.html" class="btn btn-secondary btn-sm auth-switch-btn">Crear cuenta</a>
+      <a href="index.html" class="btn btn-primary btn-sm">
+        <span>Volver al Portal</span>
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Contenedor Principal con Escenario de la Grúa Link-Belt -->
+  <main class="auth-standalone-main">
+
+    <!-- Tarjeta suspendida con ganchos y cables que suben hasta el top -->
+    <div class="auth-hanging-board crane-drop-entrance">
+
+      <!-- Conjunto de cables en triángulo que convergen en uno solo central que sube al top -->
+      <div class="auth-triangle-rigging" aria-hidden="true">
+        <!-- Cables de acero mate de alta resistencia: triángulo anclado a la cúspide de las partes rojas y cable central vertical al cielo -->
+        <svg class="auth-rigging-triangle-svg" viewBox="0 0 400 160" preserveAspectRatio="none">
+          <!-- Cable central vertical mate que sube desde el vértice (200, 30) hasta el infinito (-1200) pasando al top -->
+          <line x1="200" y1="30" x2="200" y2="-1200" stroke="#111827" stroke-width="7" stroke-linecap="round" />
+          <line x1="200" y1="30" x2="200" y2="-1200" stroke="#334155" stroke-width="5" stroke-linecap="round" />
+          <line x1="200" y1="30" x2="200" y2="-1200" stroke="#475569" stroke-width="2.5" stroke-linecap="round" />
+
+          <!-- Cable diagonal izquierdo anclado directamente a la parte superior de la polea roja izquierda (44, 126) -->
+          <line x1="44" y1="126" x2="200" y2="30" stroke="#111827" stroke-width="7" stroke-linecap="round" />
+          <line x1="44" y1="126" x2="200" y2="30" stroke="#334155" stroke-width="5" stroke-linecap="round" />
+          <line x1="44" y1="126" x2="200" y2="30" stroke="#475569" stroke-width="2.5" stroke-linecap="round" />
+
+          <!-- Cable diagonal derecho anclado directamente a la parte superior de la polea roja derecha (356, 126) -->
+          <line x1="356" y1="126" x2="200" y2="30" stroke="#111827" stroke-width="7" stroke-linecap="round" />
+          <line x1="356" y1="126" x2="200" y2="30" stroke="#334155" stroke-width="5" stroke-linecap="round" />
+          <line x1="356" y1="126" x2="200" y2="30" stroke="#475569" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+
+        <!-- Anillo maestro central: 100% perfectamente circular, con el mismo aspecto que los círculos del panel -->
+        <div class="auth-rigging-master-ring"></div>
+
+        <!-- Poleas / grilletes rojos en las esquinas superiores -->
+        <div class="auth-board-anchor anchor-left">
+          <span class="auth-board-shackle"></span>
+          <span class="auth-board-grommet"></span>
+        </div>
+        <div class="auth-board-anchor anchor-right">
+          <span class="auth-board-shackle"></span>
+          <span class="auth-board-grommet"></span>
+        </div>
+      </div>
+
+      <!-- Encabezado de la Tarjeta (Captura Oficial 2) -->
+      <div class="auth-card-header">
+        <div class="auth-header-icon-circle">
+          <svg viewBox="0 0 24 24" class="icon icon-lg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <h1 class="auth-card-title">Iniciar sesión</h1>
+          <p class="auth-card-subtitle">Accede a tu cuenta para continuar</p>
+        </div>
+      </div>
+
+      <!-- Formulario de Inicio de Sesión -->
+      <form id="login-form" class="auth-form">
+        <div class="field">
+          <div class="input-with-icon">
+            <svg class="input-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="email" id="login-email" class="input input-pill" placeholder="Usuario / Correo electrónico" autocomplete="email" required />
+          </div>
+          <span class="field-error"></span>
+        </div>
+
+        <div class="field">
+          <div class="input-with-icon">
+            <svg class="input-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="login-password" class="input input-pill" placeholder="Contraseña" autocomplete="current-password" required />
+            <button type="button" class="btn-toggle-password" aria-label="Mostrar contraseña" data-target="login-password">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <span class="field-error"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-pill-lg">
+          <span>Iniciar sesión</span>
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+
+        <div class="auth-row-options">
+          <label class="auth-remember">
+            <input type="checkbox" id="login-remember" checked />
+            <span>Recordar usuario</span>
+          </label>
+          <a href="#" class="auth-forgot" id="btn-olvido-contrasena">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Cuentas Demo de Evaluación Inmediata -->
+        <div class="demo-accounts-pill">
+          <span class="demo-title">Ingreso rápido evaluación demo:</span>
+          <div class="demo-chips">
+            <button type="button" class="btn-demo-chip" data-demo-email="despacho@gruaslondono.com">
+              <span class="demo-chip-role">Operador</span> Despacho
+            </button>
+            <button type="button" class="btn-demo-chip" data-demo-email="conductor@gruaslondono.com">
+              <span class="demo-chip-role">Conductor</span> Grúa 03
+            </button>
+            <button type="button" class="btn-demo-chip" data-demo-email="admin@gruaslondono.com">
+              <span class="demo-chip-role">Admin</span> Total
+            </button>
+          </div>
+        </div>
+
+        <p class="auth-switch-text" style="margin-top:16px;">
+          ¿Aún no tienes cuenta? <a href="registro.html" class="text-danger-link">Crear cuenta aquí</a>
+        </p>
+      </form>
+    </div>
+
+    <!-- Panel Lateral: Mensaje Oficial sobre la Maquinaria Link-Belt -->
+    <div class="auth-standalone-hero-text">
+      <span class="red-accent-bar"></span>
+      <h2 class="side-title">
+        Siempre en<br />
+        <strong>movimiento</strong>,<br />
+        también en lo digital.
+      </h2>
+      <p class="side-subtitle">
+        Gestiona y despacha servicios de remolque, monitorea grúas en carretera en tiempo real y accede al sistema regulado SICETAC con total trazabilidad.
+      </p>
+    </div>
+
+  </main>
+
+  <!-- CDN Firebase compat oficial -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- MVC Core & Controllers -->
+  <script src="js/config/firebase-config.js"></script>
+  <script src="js/utils/formatters.js"></script>
+  <script src="js/utils/notifications.js"></script>
+  <script src="js/models/user.model.js"></script>
+  <script src="js/models/auth.model.js"></script>
+  <script src="js/views/auth.view.js"></script>
+  <script src="js/controllers/auth.controller.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.AuthView) AuthView.init();
+      if (window.AuthController) AuthController.init();
+
+
+      // Aviso si fue redirigido por restricción de ruta
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('restringido')) {
+        Notifications.showToast('Acceso restringido: Inicia sesión con una cuenta autorizada para acceder al módulo operativo', 'warning', 6000);
+      }
+
+      // Panel suspendido de la grúa: caída física realista con balanceo pendular
+      const board = document.querySelector('.auth-hanging-board');
+      if (board) {
+        board.addEventListener('animationend', () => {
+          board.classList.remove('crane-drop-entrance');
+        }, { once: true });
+      }
+    });
+  </script>
+  <!-- Orquestador general (Transiciones suaves entre páginas) -->
+  <script src="js/app.js"></script>
+  <script>
+    try { sessionStorage.removeItem('gl_nav_auth_switch'); } catch (_) {}
+  </script>
+</body>
+</html>

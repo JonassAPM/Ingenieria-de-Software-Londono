@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    /* Compuerta de Seguridad Inmediata: Bloqueo en tiempo cero antes de renderizar DOM */
+    (function() {
+      try {
+        var raw = localStorage.getItem('gl_auth_cache');
+        var s = raw ? JSON.parse(raw) : null;
+        var r = s && s.rol ? s.rol.toUpperCase() : '';
+        if (!s || (r !== 'ADMINISTRADOR' && r !== 'OPERADOR')) {
+          document.documentElement.style.display = 'none';
+          window.location.replace('../login.html?restringido=dashboard');
+        }
+      } catch (_) {
+        document.documentElement.style.display = 'none';
+        window.location.replace('../login.html');
+      }
+    })();
+  </script>
+  <script>
+    if (sessionStorage.getItem('gl_nav_returning_to_portal') === 'true') {
+      document.documentElement.classList.add('is-portal-entering-from-auth');
+    }
+  </script>
+  <title>Mesa de Control de Despacho | Grúas Londoño</title>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos MVC Centralizados -->
+  <link rel="stylesheet" href="../assets/css/variables.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/dashboard.css" />
+</head>
+<body class="dashboard-page">
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Barra de navegación -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="../index.html" class="brand" aria-label="Grúas Londoño">
+        <img src="../assets/img/logo-gruas-londono.jpg" alt="Grúas Londoño - Soluciones Industriales" class="brand-logo-img" />
+      </a>
+
+      <nav class="nav-links">
+        <a href="dashboard.html" aria-current="page">Tablero Despacho</a>
+        <a href="conductor.html">Modo Conductor</a>
+        <a href="tracking.html">Seguimiento</a>
+        <a href="../index.html">Portal Público</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="auth-user-indicator" class="auth-indicator hidden"></div>
+        <a href="../login.html" id="btn-open-auth" class="btn btn-secondary btn-sm">Iniciar sesión</a>
+        <a href="../registro.html" class="btn btn-primary btn-sm">Crear cuenta</a>
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="container dashboard-main">
+    <!-- Pestañas de Selección de Módulo (Espacio de Trabajadores exclusivo Super Administrador) -->
+    <div class="dashboard-nav-tabs" id="dashboard-module-tabs">
+      <button type="button" class="btn btn-sm btn-primary active" id="tab-btn-despacho">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span>Mesa de Despacho</span>
+      </button>
+      <button type="button" class="btn btn-sm btn-secondary hidden" id="tab-btn-trabajadores">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span>Espacio de Trabajadores</span>
+        <span class="badge badge-plain" style="border-radius:var(--r-pill); background:#FEF2F2; color:#DC2626; border:1px solid #FCA5A5; font-size:0.65rem; padding:2px 8px; font-weight:700;">Super Admin</span>
+      </button>
+    </div>
+
+    <!-- ==========================================
+         MÓDULO 1: MESA DE DESPACHO Y ASIGNACIONES
+         ========================================== -->
+    <div id="modulo-despacho-seccion">
+      <div class="dashboard-toolbar">
+        <div class="dashboard-header-row">
+          <div class="dashboard-title-group">
+            <h1>Mesa de Control de Despacho</h1>
+            <p>Monitoreo satelital en tiempo real de asistencias viales y asignación física de flota según capacidad de tonelaje.</p>
+          </div>
+          <div class="dashboard-actions">
+            <span class="badge badge-plain" style="display:inline-flex; align-items:center; gap:8px; border-radius:var(--r-pill); padding:6px 14px; font-weight:700; background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; font-size:0.8rem; box-shadow:var(--sh-xs);">
+              <span class="live-dot" style="background:#10B981; width:8px; height:8px;"></span> Sincronización en Tiempo Real
+            </span>
+          </div>
+        </div>
+
+        <!-- KPIs Ribbon de Estados -->
+        <section class="kpi-ribbon" aria-label="Métricas operativas">
+          <article class="kpi-card kpi-pendientes">
+            <div class="kpi-icon-box">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">Pendientes</span>
+              <strong id="kpi-pendientes" class="kpi-value">0</strong>
+            </div>
+          </article>
+
+          <article class="kpi-card kpi-asignadas">
+            <div class="kpi-icon-box">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">Asignadas</span>
+              <strong id="kpi-asignadas" class="kpi-value">0</strong>
+            </div>
+          </article>
+
+          <article class="kpi-card kpi-camino">
+            <div class="kpi-icon-box">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">En Ruta / Sitio</span>
+              <strong id="kpi-en-camino" class="kpi-value">0</strong>
+            </div>
+          </article>
+
+          <article class="kpi-card kpi-finalizadas">
+            <div class="kpi-icon-box">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">Finalizadas</span>
+              <strong id="kpi-finalizadas" class="kpi-value">0</strong>
+            </div>
+          </article>
+        </section>
+
+        <!-- Barra de Filtros Reactivos -->
+        <section class="filter-bar">
+          <div class="filter-inputs">
+            <div class="search-field">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="despacho-filtro-texto" class="input" placeholder="Filtrar por radicado, cliente, placa o destino..." />
+            </div>
+
+            <div class="filter-selects">
+              <select id="despacho-filtro-estado" class="input" style="min-width: 170px;">
+                <option value="">Todos los Estados</option>
+                <option value="PENDIENTE">Pendientes (Por Asignar)</option>
+                <option value="ASIGNADA">Asignadas</option>
+                <option value="EN_CAMINO">En Camino</option>
+                <option value="EN_SITIO">En Sitio</option>
+                <option value="FINALIZADA">Finalizadas</option>
+                <option value="CANCELADA">Canceladas</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-pills">
+            <button type="button" class="filter-pill active" data-filter-estado="">Todos</button>
+            <button type="button" class="filter-pill" data-filter-estado="PENDIENTE">Pendientes</button>
+            <button type="button" class="filter-pill" data-filter-estado="ASIGNADA">Asignadas</button>
+            <button type="button" class="filter-pill" data-filter-estado="EN_CAMINO">En Camino</button>
+            <button type="button" class="filter-pill" data-filter-estado="FINALIZADA">Finalizadas</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Bandeja Dinámica de Solicitudes -->
+      <section id="despacho-bandeja" class="solicitudes-grid">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      </section>
+    </div>
+
+    <!-- ==========================================
+         MÓDULO 2: ESPACIO DE TRABAJADORES (SUPER USUARIO)
+         ========================================== -->
+    <div id="modulo-trabajadores-seccion" class="hidden">
+      <div class="dashboard-toolbar">
+        <div class="dashboard-header-row">
+          <div class="dashboard-title-group">
+            <h1>Espacio de Trabajadores y Colaboradores</h1>
+            <p>Directorio oficial de personal de operaciones: Conductores de grúa, Operadores de despacho y Administradores.</p>
+          </div>
+          <div class="dashboard-actions">
+            <button type="button" class="btn btn-primary btn-pill" id="btn-abrir-crear-trabajador">
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Registrar Nuevo Trabajador</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPIs de Personal -->
+        <section class="kpi-ribbon" aria-label="Métricas de personal">
+          <article class="kpi-card">
+            <div class="kpi-icon-box" style="color:var(--gl-primary); background:var(--gl-danger-soft);">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Colaboradores</span>
+              <strong id="kpi-trabajadores-total" class="kpi-value">0</strong>
+            </div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-icon-box" style="color:#16A34A; background:#F0FDF4;">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">Conductores de Grúa</span>
+              <strong id="kpi-trabajadores-conductores" class="kpi-value">0</strong>
+            </div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-icon-box" style="color:#2563EB; background:#EFF6FF;">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">Operadores Despacho</span>
+              <strong id="kpi-trabajadores-operadores" class="kpi-value">0</strong>
+            </div>
+          </article>
+
+          <article class="kpi-card">
+            <div class="kpi-icon-box" style="color:#DC2626; background:#FEF2F2;">
+              <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="kpi-info">
+              <span class="kpi-label">Administradores</span>
+              <strong id="kpi-trabajadores-admins" class="kpi-value">0</strong>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <!-- Directorio de Trabajadores en Tabla Elegante -->
+      <section class="worker-table-card">
+        <div class="worker-table-responsive">
+          <table class="worker-table">
+            <thead>
+              <tr>
+                <th>Colaborador</th>
+                <th>Contacto</th>
+                <th>Rol Asignado</th>
+                <th>Detalle Operativo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-trabajadores-cuerpo">
+              <tr>
+                <td colspan="6" style="text-align:center; padding:32px;">Cargando directorio de colaboradores desde Cloud Firestore...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modal para Asignar Grúa -->
+  <div id="modal-asignar-grua" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="asignar-modal-titulo">
+    <div class="modal">
+      <button class="modal-close" data-close-modal aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="modal-header">
+        <h2 id="asignar-modal-titulo">Asignar Grúa a Solicitud</h2>
+        <p>Radicado en despacho: <strong id="asignar-radicado" style="color:var(--gl-primary); font-family:var(--gl-font-mono);">—</strong></p>
+        <p id="asignar-vehiculo-info" style="font-size:0.85rem; color:var(--gl-text-2);"></p>
+      </div>
+
+      <form id="form-asignar-grua" class="form-grid">
+        <div class="field field-full">
+          <label for="asignar-grua-select">Seleccionar Grúa de la Flota <span class="req">*</span></label>
+          <select id="asignar-grua-select" class="input" required>
+            <option value="">Cargando catálogo de flota...</option>
+          </select>
+          <small class="field-help">Por regla RN-04, el sistema bloquea unidades cuya capacidad sea inferior al peso del vehículo.</small>
+        </div>
+
+        <div class="modal-actions field-full" style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+          <button type="button" class="btn btn-secondary btn-pill" data-close-modal>Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-pill">Confirmar Asignación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Bitácora y Auditoría de la Orden -->
+  <div id="modal-bitacora" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="bitacora-modal-titulo">
+    <div class="modal modal-lg">
+      <button class="modal-close" data-close-modal aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="modal-header">
+        <h2 id="bitacora-modal-titulo">Bitácora Operativa de Despacho</h2>
+        <p>Historial auditable del servicio <strong id="bitacora-radicado" style="color:var(--gl-primary); font-family:var(--gl-font-mono);">—</strong></p>
+      </div>
+
+      <div id="bitacora-contenido">
+        <!-- Entradas dinámicas de bitácora -->
+      </div>
+
+      <!-- Formulario para agregar nota de campo -->
+      <form id="form-agregar-nota" class="bitacora-form">
+        <input type="text" id="input-nueva-nota" class="input" placeholder="Escribe una observación operativa (ej: Vía despejada, vehículo cargado)..." required />
+        <button type="submit" class="btn btn-primary btn-sm">Añadir Nota</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Creación de Trabajador (Exclusivo Super Administrador) -->
+  <div id="modal-crear-trabajador" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="crear-trabajador-titulo">
+    <div class="modal modal-lg">
+      <button class="modal-close" data-close-modal-trabajador aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="modal-header">
+        <h2 id="crear-trabajador-titulo">Registrar Nuevo Colaborador</h2>
+        <p>Esta cuenta se guardará directamente en tu base de datos Cloud Firestore con credenciales cifradas.</p>
+      </div>
+
+      <form id="form-crear-trabajador" class="form-grid">
+        <div class="field field-full">
+          <label for="trabajador-rol-select">Tipo de Colaborador (Rol Operativo) <span class="req">*</span></label>
+          <select id="trabajador-rol-select" class="input" required>
+            <option value="CONDUCTOR">Conductor de Grúa (Terminal Móvil en Carretera)</option>
+            <option value="OPERADOR">Operador de Despacho (Mesa de Control y Logística)</option>
+            <option value="ADMINISTRADOR">Super Administrador (Control Total y Gestión de Personal)</option>
+          </select>
+        </div>
+
+        <!-- Campos específicos para Conductor -->
+        <div id="campos-rol-conductor" class="field-full" style="display:grid; grid-template-columns: 1.2fr 1fr; gap:14px; background:var(--gl-surface-muted); padding:16px; border-radius:18px; border:1px solid var(--gl-border);">
+          <div class="field">
+            <label for="trabajador-grua-select">Grúa Asignada <span class="req">*</span></label>
+            <select id="trabajador-grua-select" class="input" style="border-radius:var(--r-md);">
+              <option value="GRUA-01">GRUA-01 · Chevrolet NPR (Plataforma - 4.5 Ton)</option>
+              <option value="GRUA-02">GRUA-02 · International 4300 (Pluma - 12 Ton)</option>
+              <option value="GRUA-03">GRUA-03 · Chevrolet FTR (Plataforma - 5 Ton)</option>
+              <option value="GRUA-04">GRUA-04 · Kenworth T800 (Cama Baja - 35 Ton)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="trabajador-licencia-select">Categoría Licencia <span class="req">*</span></label>
+            <select id="trabajador-licencia-select" class="input" style="border-radius:var(--r-md);">
+              <option value="C2">C2 (Camiones Rígidos y Grúas Livianas/Medianas)</option>
+              <option value="C3">C3 (Vehículos Articulados y Cama Baja Pesada)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Campos específicos para Operador -->
+        <div id="campos-rol-operador" class="field-full hidden" style="display:grid; grid-template-columns: 1fr 1fr; gap:14px; background:var(--gl-surface-muted); padding:16px; border-radius:18px; border:1px solid var(--gl-border);">
+          <div class="field">
+            <label for="trabajador-turno-select">Turno Asignado <span class="req">*</span></label>
+            <select id="trabajador-turno-select" class="input" style="border-radius:var(--r-md);">
+              <option value="Diurno (06:00 - 14:00)">Diurno (06:00 - 14:00)</option>
+              <option value="Vespertino (14:00 - 22:00)">Vespertino (14:00 - 22:00)</option>
+              <option value="Nocturno (22:00 - 06:00)">Nocturno (22:00 - 06:00)</option>
+              <option value="Rotativo">Rotativo 24/7</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="trabajador-estacion-input">Estación / Sede <span class="req">*</span></label>
+            <input type="text" id="trabajador-estacion-input" class="input" style="border-radius:var(--r-md);" value="Central Aguachica (Cesar)" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="trabajador-nombre">Nombre Completo <span class="req">*</span></label>
+          <input type="text" id="trabajador-nombre" class="input" placeholder="Ej: Mario Restrepo" required />
+        </div>
+
+        <div class="field">
+          <label for="trabajador-documento">Cédula de Ciudadanía <span class="req">*</span></label>
+          <input type="text" id="trabajador-documento" class="input" placeholder="Ej: 1098765432" required />
+        </div>
+
+        <div class="field">
+          <label for="trabajador-correo">Correo Corporativo <span class="req">*</span></label>
+          <input type="email" id="trabajador-correo" class="input" placeholder="ejemplo@gruaslondono.com" required />
+        </div>
+
+        <div class="field">
+          <label for="trabajador-telefono">Teléfono Celular <span class="req">*</span></label>
+          <input type="tel" id="trabajador-telefono" class="input" placeholder="Ej: 3101234567" required />
+        </div>
+
+        <div class="field field-full">
+          <label for="trabajador-password">Contraseña Inicial de Acceso <span class="req">*</span></label>
+          <input type="password" id="trabajador-password" class="input" placeholder="Mínimo 6 caracteres" minlength="6" required />
+          <small class="field-help">El colaborador utilizará este correo y contraseña para ingresar al sistema desde la página de inicio de sesión.</small>
+        </div>
+
+        <div class="modal-actions field-full" style="display:flex; justify-content:flex-end; align-items:center; gap:12px; margin-top:20px;">
+          <button type="button" class="btn btn-secondary btn-pill" data-close-modal-trabajador>Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-pill">Guardar Colaborador en Base de Datos</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- CDN Firebase compat oficial -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- CDN jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Capa MVC: Config, Utils, Models, Views, Controllers -->
+  <script src="../js/config/firebase-config.js"></script>
+  <script src="../js/utils/formatters.js"></script>
+  <script src="../js/utils/notifications.js"></script>
+  <script src="../js/utils/pdf-generator.js"></script>
+
+  <script src="../js/models/user.model.js"></script>
+  <script src="../js/models/auth.model.js"></script>
+  <script src="../js/models/cotizacion.model.js"></script>
+  <script src="../js/models/radicacion.model.js"></script>
+  <script src="../js/models/despacho.model.js"></script>
+
+  <script src="../js/views/auth.view.js"></script>
+  <script src="../js/views/despacho.view.js"></script>
+  <script src="../js/views/trabajadores.view.js"></script>
+
+  <script src="../js/controllers/auth.controller.js"></script>
+  <script src="../js/controllers/despacho.controller.js"></script>
+  <script src="../js/controllers/trabajadores.controller.js"></script>
+
+  <!-- Orquestador -->
+  <script src="../js/app.js"></script>
+  <script>
+    try { sessionStorage.removeItem('gl_nav_returning_to_portal'); } catch (_) {}
+  </script>
+</body>
+</html>

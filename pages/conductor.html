@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    /* Compuerta de Seguridad Inmediata: Bloqueo en tiempo cero antes de renderizar DOM */
+    (function() {
+      try {
+        var raw = localStorage.getItem('gl_auth_cache');
+        var s = raw ? JSON.parse(raw) : null;
+        var r = s && s.rol ? s.rol.toUpperCase() : '';
+        if (!s || (r !== 'CONDUCTOR' && r !== 'OPERADOR' && r !== 'ADMINISTRADOR')) {
+          document.documentElement.style.display = 'none';
+          window.location.replace('../login.html?restringido=conductor');
+        }
+      } catch (_) {
+        document.documentElement.style.display = 'none';
+        window.location.replace('../login.html');
+      }
+    })();
+  </script>
+  <script>
+    if (sessionStorage.getItem('gl_nav_returning_to_portal') === 'true') {
+      document.documentElement.classList.add('is-portal-entering-from-auth');
+    }
+  </script>
+  <title>Terminal de Conductor | Grúas Londoño</title>
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Montserrat:ital,wght@0,600;0,700;0,800;1,700;1,800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos MVC Centralizados -->
+  <link rel="stylesheet" href="../assets/css/variables.css" />
+  <link rel="stylesheet" href="../assets/css/base.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/dashboard.css" />
+</head>
+<body class="conductor-page">
+
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Barra de navegación oficial -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="../index.html" class="brand" aria-label="Grúas Londoño">
+        <img src="../assets/img/logo-gruas-londono.jpg" alt="Grúas Londoño - Soluciones Industriales" class="brand-logo-img" />
+      </a>
+
+      <nav class="nav-links">
+        <a href="../index.html#inicio">Inicio</a>
+        <a href="../index.html#servicios">Servicios</a>
+        <a href="../index.html#cotizador">Cotizador</a>
+        <a href="../index.html#radicacion">Radicar</a>
+        <a href="tracking.html">Seguimiento</a>
+        <a href="dashboard.html" style="display: none;">Mesa de Control</a>
+        <a href="conductor.html" aria-current="page" class="active">Modo Conductor</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div id="auth-user-indicator" class="auth-indicator hidden"></div>
+        <a href="../login.html" id="btn-open-auth" class="btn btn-secondary btn-sm">Iniciar sesión</a>
+        <a href="../registro.html" class="btn btn-primary btn-sm">Crear cuenta</a>
+        <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Conductor Oficial -->
+  <section class="conductor-hero">
+    <div class="tracking-hero-pattern" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-pill" style="margin-bottom:16px;">
+        <span>Terminal Móvil de Conductor · Asistencia y Traslado en Carretera</span>
+      </div>
+      <h1>Órdenes Asignadas <span style="color:var(--gl-primary);">a tu Unidad</span></h1>
+      <p>Reporta el avance del servicio en carretera con un toque rápido y mantén comunicación directa con despacho y cliente.</p>
+      <div style="margin-top:16px; display:flex; justify-content:center; gap:12px;">
+        <a href="dashboard.html" class="btn btn-secondary btn-sm">
+          <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span>Ir a Mesa de Control (Despacho)</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <main class="container conductor-main">
+    <!-- Selector de Grúa para Conductores -->
+    <div class="conductor-selector-grua">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <svg class="icon" viewBox="0 0 24 24" style="color:var(--gl-primary); width:24px; height:24px;"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <div>
+          <label for="conductor-filtro-grua" style="margin:0;">Selecciona tu grúa asignada:</label>
+          <small style="color:var(--gl-text-3); display:block;">Filtra las órdenes correspondientes a tu unidad móvil o consulta todas las activas</small>
+        </div>
+      </div>
+      <select id="conductor-filtro-grua" class="input input-pill" style="font-size:1.02rem; min-height:48px; margin-top:8px;">
+        <option value="">Cargando flota...</option>
+      </select>
+    </div>
+
+    <!-- Lista Dinámica de Servicios Asignados para Conductor -->
+    <section id="conductor-lista">
+      <div class="skeleton skeleton-card" style="min-height: 280px; background: #FFFFFF; border-radius:20px;"></div>
+    </section>
+  </main>
+
+  <!-- Footer Corporativo Oficial -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="../index.html" class="brand">
+          <span class="brand-mark">GL</span>
+          <div class="brand-text">
+            <strong>Grúas Londoño</strong>
+            <small>Líder en Auxilio Vial Colombiano</small>
+          </div>
+        </a>
+        <p>Servicio de grúas de plataforma, pluma y cama baja bajo estándares de seguridad vial y regulación oficial SICETAC.</p>
+      </div>
+
+      <div>
+        <h4>Enlaces Rápidos</h4>
+        <ul>
+          <li><a href="../index.html#servicios">Servicios de Grúa</a></li>
+          <li><a href="../index.html#cotizador">Cotizador en Línea</a></li>
+          <li><a href="../index.html#radicacion">Radicar Asistencia</a></li>
+          <li><a href="tracking.html">Consulta de Radicado</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Operación Interna</h4>
+        <ul>
+          <li><a href="dashboard.html">Mesa de Control (Despacho)</a></li>
+          <li><a href="conductor.html">Portal Conductor</a></li>
+          <li><a href="../login.html">Iniciar Sesión</a></li>
+          <li><a href="../registro.html">Crear Cuenta</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Líneas de Atención</h4>
+        <ul>
+          <li><strong>Emergencias 24/7:</strong> 310 123 4567</li>
+          <li><strong>PBX Bucaramanga:</strong> (607) 698 1234</li>
+          <li><strong>Aguachica (Cesar):</strong> (605) 565 4321</li>
+          <li><strong>Soporte Legal SICETAC:</strong> MinTransporte</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© 2026 Grúas Londoño S.A.S. Todos los derechos reservados.</span>
+      <span>Terminal Móvil Conductor · Sincronización en Tiempo Real</span>
+    </div>
+  </footer>
+
+  <!-- CDN Firebase compat oficial -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- CDN jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Capa MVC: Config, Utils, Models, Views, Controllers -->
+  <script src="../js/config/firebase-config.js"></script>
+  <script src="../js/utils/formatters.js"></script>
+  <script src="../js/utils/notifications.js"></script>
+  <script src="../js/utils/pdf-generator.js"></script>
+
+  <script src="../js/models/user.model.js"></script>
+  <script src="../js/models/auth.model.js"></script>
+  <script src="../js/models/cotizacion.model.js"></script>
+  <script src="../js/models/radicacion.model.js"></script>
+  <script src="../js/models/despacho.model.js"></script>
+
+  <script src="../js/views/auth.view.js"></script>
+  <script src="../js/views/despacho.view.js"></script>
+
+  <script src="../js/controllers/auth.controller.js"></script>
+  <script src="../js/controllers/despacho.controller.js"></script>
+
+  <!-- Orquestador -->
+  <script src="../js/app.js"></script>
+  <script>
+    try { sessionStorage.removeItem('gl_nav_returning_to_portal'); } catch (_) {}
+  </script>
+</body>
+</html>

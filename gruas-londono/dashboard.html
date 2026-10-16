@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Grúas Londoño</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body class="dashboard-body">
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-icon">GL</span>
+        <span>Grúas Londoño</span>
+      </a>
+      <nav class="nav-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="conductor.html">Conductor</a>
+        <a href="index.html">Portal</a>
+      </nav>
+      <div class="nav-actions">
+        <button id="btn-open-auth" class="btn btn-ghost">Iniciar sesión</button>
+        <span id="auth-user-indicator" class="auth-indicator hidden"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container dashboard-main">
+    <section class="dashboard-header">
+      <h1>Mesa de Control de Despacho</h1>
+      <p>Monitoreo en tiempo real de solicitudes y flota.</p>
+    </section>
+
+    <!-- KPIs -->
+    <section class="kpi-grid">
+      <article class="kpi-card">
+        <span class="kpi-label">Pendientes</span>
+        <strong id="kpi-pendientes">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span class="kpi-label">Asignadas</span>
+        <strong id="kpi-asignadas">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span class="kpi-label">En camino</span>
+        <strong id="kpi-en-camino">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span class="kpi-label">Finalizadas</span>
+        <strong id="kpi-finalizadas">0</strong>
+      </article>
+    </section>
+
+    <!-- Filtros -->
+    <section class="filtros">
+      <input type="text" id="despacho-filtro-texto" placeholder="Buscar por radicado, cliente o placa" />
+      <select id="despacho-filtro-estado">
+        <option value="">Todos los estados</option>
+        <option value="PENDIENTE">Pendiente</option>
+        <option value="ASIGNADA">Asignada</option>
+        <option value="EN_CAMINO">En camino</option>
+        <option value="EN_SITIO">En sitio</option>
+        <option value="FINALIZADA">Finalizada</option>
+        <option value="CANCELADA">Cancelada</option>
+      </select>
+    </section>
+
+    <!-- Bandeja de solicitudes -->
+    <section id="despacho-bandeja" class="bandeja-solicitudes">
+      <!-- Las tarjetas se generan dinámicamente -->
+    </section>
+  </main>
+
+  <!-- Modal Asignar Grúa -->
+  <div id="modal-asignar-grua" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="asignar-titulo">
+    <div class="modal">
+      <button class="modal-close" aria-label="Cerrar" data-close-modal>×</button>
+      <h2 id="asignar-titulo">Asignar grúa</h2>
+      <p>Radicado: <strong id="asignar-radicado"></strong></p>
+      <form id="form-asignar-grua" class="form-grid">
+        <div class="form-group">
+          <label for="asignar-grua-select">Seleccionar grúa</label>
+          <select id="asignar-grua-select" required>
+            <option value="">Cargando grúas...</option>
+          </select>
+          <span class="error-message"></span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Asignar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Bitácora -->
+  <div id="modal-bitacora" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="bitacora-titulo">
+    <div class="modal">
+      <button class="modal-close" aria-label="Cerrar" data-close-modal>×</button>
+      <h2 id="bitacora-titulo">Bitácora de la solicitud</h2>
+      <div id="bitacora-contenido" class="bitacora-lista">
+        <!-- Notas generadas dinámicamente -->
+      </div>
+      <div class="bitacora-nueva">
+        <textarea id="bitacora-nueva-nota" rows="2" placeholder="Agregar nota..."></textarea>
+        <button id="btn-agregar-nota" class="btn btn-secondary">Agregar nota</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- Utilidades -->
+  <script src="js/utils/formatters.js"></script>
+  <script src="js/utils/notifications.js"></script>
+
+  <!-- Microservicio despacho -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/services/despacho/despacho.model.js"></script>
+  <script src="js/services/despacho/despacho.view.js"></script>
+  <script src="js/services/despacho/despacho.controller.js"></script>
+
+  <!-- Orquestador -->
+  <script src="js/app.js"></script>
+</body>
+</html>

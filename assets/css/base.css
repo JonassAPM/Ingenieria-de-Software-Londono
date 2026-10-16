@@ -1,0 +1,946 @@
+/* =====================================================================
+   BASE · reset, tipografía, layout, botones, tarjetas, modales,
+   toasts, skeletons y utilidades. Consume exclusivamente tokens.
+   ===================================================================== */
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  zoom: 0.8;
+  background-color: var(--gl-bg);
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + var(--sp-4));
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Transiciones de Navegación Suave entre Páginas (Cross-Document View Transitions) */
+@view-transition {
+  navigation: auto;
+}
+
+/* Barra superior compartida y persistente: NUNCA se mueve de posición ni tamaño */
+.navbar,
+.auth-standalone-nav {
+  view-transition-name: main-navbar;
+}
+
+::view-transition-group(main-navbar) {
+  animation-duration: 0.22s;
+}
+
+/* El armazón de la barra superior es 100% permanente: NUNCA parpadea ni desaparece */
+::view-transition-old(main-navbar),
+::view-transition-new(main-navbar) {
+  animation: none;
+}
+
+/* El armazón de la barra superior es 100% permanente: NUNCA parpadea ni se mueve */
+::view-transition-old(main-navbar),
+::view-transition-new(main-navbar) {
+  animation: none;
+}
+
+::view-transition-old(root) {
+  animation: pageFadeOut 0.24s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: pageFadeIn 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes pageFadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-4px); }
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--gl-bg);
+  color: var(--gl-text);
+  font-family: var(--gl-font);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Estado de salida: La barra superior, el logo (.brand) y las opciones de sesión (.nav-actions)
+   son PERMANENTES y permanecen al 100% de opacidad sin desaparecer entre páginas regulares.
+   SOLO el cuerpo de la página y el indicador de navegación activo reflejan el cambio */
+body.page-is-leaving {
+  pointer-events: none;
+}
+
+body.page-is-leaving > main,
+body.page-is-leaving > footer,
+body.page-is-leaving > section,
+body.page-is-leaving > .demo-banner,
+body.page-is-leaving > .toast-container {
+  opacity: 0 !important;
+  transform: translateY(-6px) !important;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* El logo (.brand) y los botones de sesión (.nav-actions) NUNCA se ocultan ni se desvanecen entre páginas estándar.
+   Solo el indicador del enlace activo refleja sutilmente el cambio de sección */
+body.page-is-leaving .navbar .nav-links a[aria-current='page']::after,
+body.page-is-leaving .navbar .nav-links a.active::after {
+  opacity: 0 !important;
+  transform: scaleX(0.4) !important;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+/* =========================================================================
+   CASO 1: Transición ENTRE pantallas de autenticación (Login <-> Registro)
+   - El logo y el botón 'Volver al Portal' permanecen 100% VISIBLES E INTACTOS.
+   - Solo el botón de cambio de modo (.btn-secondary: "Crear cuenta" / "Iniciar sesión")
+     se desvanece suavemente con desplazamiento hacia la izquierda sin cortes abruptos.
+   ========================================================================= */
+body.switching-auth-mode .auth-standalone-nav .brand,
+body.switching-auth-mode .auth-standalone-nav .nav-actions .btn-primary {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+body.switching-auth-mode .auth-standalone-nav .nav-actions .btn-secondary {
+  opacity: 0 !important;
+  transform: translateX(-12px) scale(0.96) !important;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* =========================================================================
+   CASO 2: Transición DESDE Portal General HACIA Autenticación (Inicio/Seguimiento -> Login/Registro)
+   - El logo se desplaza suavemente hacia la izquierda y se desvanece de forma coordinada.
+   - Los enlaces centrales (.nav-links) se elevan y desvanecen suavemente.
+   - Los botones de acción (.nav-actions) se desplazan hacia la derecha y se desvanecen.
+   ========================================================================= */
+body.leaving-portal-to-auth .navbar .brand {
+  opacity: 0 !important;
+  transform: translateX(-24px) scale(0.97) !important;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.leaving-portal-to-auth .navbar .nav-links {
+  opacity: 0 !important;
+  transform: translateY(-8px) scale(0.97) !important;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.leaving-portal-to-auth .navbar .nav-actions {
+  opacity: 0 !important;
+  transform: translateX(20px) !important;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* =========================================================================
+   CASO 3: Transición DESDE Autenticación DE REGRESO al Portal (Login/Registro -> Inicio/Seguimiento)
+   - El logo se desplaza suavemente hacia la derecha (hacia el portal) y se desvanece.
+   - Los botones de autenticación se desplazan hacia la derecha y se desvanecen.
+   ========================================================================= */
+body.leaving-auth-to-portal .auth-standalone-nav .brand {
+  opacity: 0 !important;
+  transform: translateX(24px) scale(0.97) !important;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.leaving-auth-to-portal .auth-standalone-nav .nav-actions {
+  opacity: 0 !important;
+  transform: translateX(20px) !important;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+main {
+  flex: 1;
+  min-height: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--gl-text);
+}
+
+h1 { font-size: var(--fs-3xl); }
+h2 { font-size: var(--fs-2xl); }
+h3 { font-size: var(--fs-lg); }
+h4 { font-size: var(--fs-base); }
+
+p {
+  color: var(--gl-text-2);
+}
+
+a {
+  color: var(--gl-accent);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+
+a:hover {
+  color: var(--gl-accent-hover);
+}
+
+:focus-visible {
+  outline: var(--bw-strong) solid var(--gl-accent);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+::selection {
+  background: var(--gl-accent-soft);
+  color: var(--gl-primary);
+}
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 32px);
+}
+
+.section {
+  padding-block: var(--section-pad);
+}
+
+.section-header {
+  max-width: 640px;
+  margin-bottom: clamp(24px, 4vw, 40px);
+}
+
+.section-header.centered {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--gl-accent);
+}
+
+.section-header h2 {
+  margin-bottom: var(--sp-2);
+}
+
+.section-header p {
+  font-size: var(--fs-lg);
+}
+
+/* ---------- Iconos ---------- */
+.icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-sm { width: 1em; height: 1em; }
+.icon-lg { width: 1.6em; height: 1.6em; }
+
+/* ---------- Botones con relieve táctil ---------- */
+.btn {
+  --btn-bg: var(--gl-surface);
+  --btn-bg-hover: var(--gl-surface-muted);
+  --btn-fg: var(--gl-text);
+  --btn-border: var(--gl-border-strong);
+  --btn-relief-color: var(--gl-border-strong);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 44px;
+  padding: 0 clamp(16px, 2vw, 22px);
+  font-size: clamp(0.85rem, 0.8rem + 0.2vw, 0.95rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1;
+  color: var(--btn-fg);
+  background: var(--btn-bg);
+  border: var(--bw) solid var(--btn-border);
+  border-radius: var(--r-pill);
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.12);
+  transform: translateY(0);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  white-space: nowrap;
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    transform var(--dur-base) var(--ease-spring),
+    box-shadow var(--dur-base) var(--ease-spring),
+    background-color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    color var(--dur-fast) var(--ease-standard);
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-22deg);
+  transition: none;
+  pointer-events: none;
+}
+
+.btn:hover {
+  color: var(--btn-fg);
+  background: var(--btn-bg-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.20);
+}
+
+.btn:hover::after {
+  left: 150%;
+  transition: left 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.btn:active {
+  transform: translateY(2px) scale(0.985);
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.18);
+  transition-duration: 50ms;
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-primary {
+  --btn-bg: var(--gl-primary);
+  --btn-bg-hover: var(--gl-primary-hover);
+  --btn-fg: #FFFFFF;
+  --btn-border: var(--gl-primary);
+  box-shadow: 0 4px 16px -2px rgba(211, 24, 38, 0.40);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 8px 24px -4px rgba(211, 24, 38, 0.55);
+}
+
+.btn-navy {
+  --btn-bg: var(--gl-secondary);
+  --btn-bg-hover: var(--gl-secondary-light);
+  --btn-fg: #FFFFFF;
+  --btn-border: var(--gl-secondary);
+}
+
+.btn-burgundy {
+  --btn-bg: var(--gl-burgundy);
+  --btn-bg-hover: var(--gl-burgundy-hover);
+  --btn-fg: #FFFFFF;
+  --btn-border: var(--gl-burgundy);
+  box-shadow: 0 4px 14px -2px rgba(125, 10, 20, 0.35);
+}
+
+.btn-secondary {
+  --btn-bg: #FFFFFF;
+  --btn-bg-hover: var(--gl-surface-sunken);
+  --btn-fg: var(--gl-text);
+  --btn-border: var(--gl-border-strong);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+
+.btn-success {
+  --btn-bg: var(--gl-success);
+  --btn-bg-hover: var(--gl-success-strong);
+  --btn-fg: #FFFFFF;
+  --btn-border: var(--gl-success-strong);
+  --btn-relief-color: var(--gl-success-strong);
+}
+
+.btn-danger {
+  --btn-bg: var(--gl-surface);
+  --btn-bg-hover: var(--gl-danger-soft);
+  --btn-fg: var(--gl-danger-strong);
+  --btn-border: var(--estado-pendiente-border);
+  --btn-relief-color: var(--gl-danger-strong);
+}
+
+.btn-danger-solid {
+  --btn-bg: var(--gl-danger);
+  --btn-bg-hover: var(--gl-danger-strong);
+  --btn-fg: #FFFFFF;
+  --btn-border: var(--gl-danger-strong);
+  --btn-relief-color: var(--gl-danger-strong);
+}
+
+.btn-whatsapp {
+  --btn-bg: var(--gl-whatsapp);
+  --btn-bg-hover: var(--gl-whatsapp-strong);
+  --btn-fg: #FFFFFF;
+  --btn-border: var(--gl-whatsapp-strong);
+  --btn-relief-color: var(--gl-whatsapp-strong);
+}
+
+.btn-light {
+  --btn-bg: #FFFFFF;
+  --btn-bg-hover: var(--gl-surface-muted);
+  --btn-fg: var(--gl-primary);
+  --btn-border: #FFFFFF;
+  --btn-relief-color: rgba(0, 0, 0, 0.35);
+}
+
+.btn-outline-light {
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--gl-surface-inverse);
+  --btn-fg: #FFFFFF;
+  --btn-border: var(--gl-border-inverse);
+  --btn-relief-color: rgba(0, 0, 0, 0.35);
+}
+
+.btn-ghost {
+  --btn-bg: transparent;
+  --btn-bg-hover: var(--gl-surface-muted);
+  --btn-fg: var(--gl-text-2);
+  --btn-border: transparent;
+  box-shadow: none;
+}
+
+.btn-ghost:hover,
+.btn-ghost:active,
+.btn-ghost:disabled {
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-sm {
+  min-height: 36px;
+  padding: 0 clamp(14px, 1.5vw, 18px);
+  font-size: var(--fs-xs);
+  border-radius: var(--r-pill);
+}
+
+.btn-xs {
+  min-height: 28px;
+  padding: 0 12px;
+  font-size: 0.75rem;
+  border-radius: var(--r-pill);
+}
+
+.btn-lg {
+  min-height: 54px;
+  padding: 0 var(--sp-6);
+  font-size: var(--fs-base);
+  border-radius: var(--r-pill);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-icon {
+  width: 40px;
+  min-height: 40px;
+  padding: 0;
+}
+
+/* Estado de carga (CONVENTIONS: reposo → carga → resultado) */
+.btn.is-loading {
+  color: transparent;
+  pointer-events: none;
+}
+
+.btn.is-loading::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--btn-fg);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+
+.btn.is-loading .icon {
+  opacity: 0;
+}
+
+/* ---------- Tarjetas ---------- */
+.card {
+  position: relative;
+  background: var(--gl-surface);
+  border: var(--bw) solid var(--gl-border);
+  border-radius: var(--r-lg);
+  padding: clamp(16px, 2.5vw, 28px);
+  box-shadow: var(--sh-sm);
+}
+
+.card-interactive {
+  transition:
+    transform var(--dur-base) var(--ease-spring),
+    box-shadow var(--dur-base) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard);
+}
+
+.card-interactive:hover {
+  transform: translateY(-3px);
+  border-color: var(--gl-border-strong);
+  box-shadow: var(--sh-lg);
+}
+
+/* ---------- Tarjetas Suspendidas de Grúa (Estilo Oficial Link-Belt) ---------- */
+.card-hanging {
+  position: relative;
+  background: var(--gl-surface);
+  border-radius: var(--r-card);
+  padding: clamp(24px, 4vw, 40px);
+  box-shadow: var(--sh-hanging-card);
+}
+
+.card-hanging-eyelets {
+  position: absolute;
+  top: -24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 38px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.eyelet-hook {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.eyelet-cable {
+  width: 4px;
+  height: 52px;
+  background: linear-gradient(90deg, #475569 0%, #94A3B8 50%, #334155 100%);
+  box-shadow: 1px 0 2px rgba(0, 0, 0, 0.4);
+}
+
+.eyelet-shackle {
+  width: 18px;
+  height: 20px;
+  border: 3.5px solid var(--gl-primary);
+  border-radius: 9px 9px 4px 4px;
+  background: transparent;
+  margin-top: -2px;
+}
+
+.eyelet-ring {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #0F172A 35%, #94A3B8 45%, #E2E8F0 70%, #CBD5E1 100%);
+  border: 2px solid #64748B;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.15);
+  margin-top: -10px;
+}
+
+/* Barra de acento rojo institucional (Presente en cada encabezado) */
+.red-accent-bar {
+  display: block;
+  width: 42px;
+  height: 4.5px;
+  background: var(--gl-primary);
+  border-radius: 3px;
+  margin-bottom: 14px;
+}
+
+/* ---------- Modales ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-4);
+  background: var(--gl-overlay);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: aparecer var(--dur-base) var(--ease-standard);
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--gl-surface);
+  border: var(--bw) solid var(--gl-border);
+  border-radius: 28px;
+  padding: clamp(22px, 3.5vw, 36px);
+  box-shadow: 0 25px 65px -12px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  animation: modalEntrada var(--dur-slow) var(--ease-spring);
+  scrollbar-width: thin;
+  scrollbar-color: var(--gl-border-strong) transparent;
+}
+
+.modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: var(--gl-border-strong);
+  border-radius: var(--r-pill);
+}
+
+.modal-lg {
+  max-width: 640px;
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding-right: var(--sp-7);
+  margin-bottom: var(--sp-5);
+}
+
+.modal-header h2 {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--gl-text);
+  letter-spacing: var(--tracking-tight);
+}
+
+.modal-header p {
+  font-size: var(--fs-sm);
+  color: var(--gl-text-2);
+}
+
+.modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--gl-surface-muted);
+  color: var(--gl-text-2);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color var(--dur-fast) var(--ease-standard), color var(--dur-fast);
+  z-index: 10;
+}
+
+.modal-close svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  transform-origin: center center;
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+
+.modal-close:hover {
+  background: var(--gl-border);
+  color: var(--gl-danger);
+}
+
+.modal-close:hover svg {
+  transform: rotate(90deg);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-5);
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+body.modal-abierto {
+  overflow: hidden;
+}
+
+/* ---------- Toasts ---------- */
+.toast-container {
+  position: fixed;
+  top: calc(var(--nav-h) + var(--sp-3));
+  right: var(--sp-4);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  width: min(380px, calc(100vw - 32px));
+  pointer-events: none;
+}
+
+.toast {
+  --toast-color: var(--gl-info);
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  overflow: hidden;
+  background: var(--gl-surface);
+  border: var(--bw) solid var(--gl-border);
+  border-left: 4px solid var(--toast-color);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-lg);
+  font-size: var(--fs-sm);
+  color: var(--gl-text);
+  pointer-events: auto;
+  animation: toastEntrada var(--dur-slow) var(--ease-spring);
+}
+
+.toast.saliendo {
+  animation: toastSalida var(--dur-base) var(--ease-standard) forwards;
+}
+
+.toast .icon {
+  color: var(--toast-color);
+  margin-top: 1px;
+}
+
+.toast-mensaje {
+  flex: 1;
+  line-height: var(--lh-snug);
+}
+
+.toast-cerrar {
+  border: none;
+  background: transparent;
+  color: var(--gl-text-3);
+  cursor: pointer;
+  line-height: 0;
+}
+
+.toast-progreso {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--toast-color);
+  opacity: 0.35;
+  transform-origin: left;
+  animation: toastProgreso linear forwards;
+}
+
+.toast-success { --toast-color: var(--gl-success); }
+.toast-error { --toast-color: var(--gl-danger); }
+.toast-warning { --toast-color: var(--gl-warning); }
+.toast-info { --toast-color: var(--gl-info); }
+
+/* ---------- Skeletons ---------- */
+.skeleton {
+  background: linear-gradient(90deg, var(--gl-surface-muted) 25%, var(--gl-surface-sunken) 37%, var(--gl-surface-muted) 63%);
+  background-size: 400% 100%;
+  border-radius: var(--r-sm);
+  animation: brillo 1.4s ease infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-bottom: var(--sp-2);
+}
+
+.skeleton-card {
+  min-height: 210px;
+  border-radius: var(--r-lg);
+}
+
+/* ---------- Banner de modo demostración ---------- */
+.demo-banner {
+  position: relative;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 8px 44px 8px 16px;
+  background: var(--gl-warning-soft);
+  border-bottom: var(--bw) solid var(--estado-ruta-border);
+  color: var(--gl-warning-strong);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  text-align: center;
+}
+
+.demo-banner-body {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+
+.demo-banner-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(180, 83, 9, 0.10);
+  color: var(--gl-warning-strong);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  transition: background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast);
+}
+
+.demo-banner-close:hover {
+  background: rgba(180, 83, 9, 0.25);
+  color: #78350F;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.demo-banner button:not(.demo-banner-close) {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-weight: var(--fw-bold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- Utilidades ---------- */
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.text-muted {
+  color: var(--gl-text-3);
+}
+
+.mono {
+  font-family: var(--gl-font-mono);
+  letter-spacing: 0;
+}
+
+/* ---------- Animaciones ---------- */
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes aparecer {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalEntrada {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes toastEntrada {
+  from { opacity: 0; transform: translateX(24px) scale(0.96); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toastSalida {
+  to { opacity: 0; transform: translateX(24px); }
+}
+
+@keyframes toastProgreso {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+@keyframes brillo {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+@keyframes pulso {
+  0% { box-shadow: 0 0 0 0 currentColor; }
+  70% { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Accesibilidad y movimiento respetado de forma no destructiva */
+@media (prefers-reduced-motion: reduce) {
+  /* No forzar 0.01ms destructivo con !important sobre transiciones de desvanecimiento y contenido */
+}
+

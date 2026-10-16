@@ -1,0 +1,188 @@
+/* =====================================================================
+   TOKENS GLOBALES · GRÚAS LONDOÑO · SOLUCIONES INDUSTRIALES
+   Identidad visual fiel al diseño oficial Link-Belt / Grúas Londoño.
+   Rojo corporativo #D31826, Borgoña institucional #7D0A14, tarjetas
+   suspendidas industriales con ojales, botones pill y tipografía fluida.
+   ===================================================================== */
+:root {
+  /* ---------- Marca Oficial Grúas Londoño (Rojo Industrial & Borgoña) ---------- */
+  --gl-primary: #D31826;             /* Rojo Link-Belt / Grúas Londoño */
+  --gl-primary-hover: #B91C1C;       /* Rojo intenso hover */
+  --gl-primary-press: #991B1B;       /* Rojo compresión activa */
+  --gl-primary-dark: #88131B;        /* Rojo óxido profundo */
+  --gl-primary-darker: #7D0A14;      /* Borgoña institucional del logotipo */
+  --gl-primary-wine: #5A060E;        /* Tinto ultra-oscuro para contraste */
+  
+  --gl-burgundy: #7D0A14;            /* Color exacto texto logotipo y nav */
+  --gl-burgundy-hover: #5A060E;
+  
+  --gl-secondary: #0F172A;          /* Grafito / Acero industrial */
+  --gl-secondary-light: #1E293B;
+  
+  --gl-accent: #D31826;             /* Acento principal: Rojo */
+  --gl-accent-hover: #B91C1C;
+  --gl-accent-press: #991B1B;
+  --gl-accent-soft: rgba(211, 24, 38, 0.08);
+  --gl-accent-ring: rgba(211, 24, 38, 0.28);
+  --gl-highlight: #F59E0B;          /* Amarillo señal / grúa */
+
+  /* ---------- Superficies y Fondos ---------- */
+  --gl-bg: #F4F6F9;
+  --gl-surface: #FFFFFF;
+  --gl-surface-muted: #F8FAFC;
+  --gl-surface-sunken: #EDF2F7;
+  --gl-border: #E2E8F0;
+  --gl-border-strong: #CBD5E1;
+  --gl-overlay: rgba(15, 23, 42, 0.65);
+  --gl-overlay-blur: rgba(15, 23, 42, 0.45);
+
+  /* ---------- Cables y Ojales Industriales (Efecto Grúa) ---------- */
+  --gl-cable-color: #64748B;
+  --gl-cable-shine: #94A3B8;
+  --gl-eyelet-metal: #CBD5E1;
+  --gl-eyelet-inner: #334155;
+  --gl-shackle-red: #D31826;
+
+  /* ---------- Texto (Contraste estricto WCAG AA) ---------- */
+  --gl-text: #0F172A;
+  --gl-text-2: #475569;
+  --gl-text-3: #64748B;
+  --gl-text-inverse: #FFFFFF;
+  --gl-text-inverse-2: rgba(255, 255, 255, 0.85);
+  --gl-text-inverse-3: rgba(255, 255, 255, 0.65);
+  --gl-border-inverse: rgba(255, 255, 255, 0.20);
+  --gl-surface-inverse: rgba(255, 255, 255, 0.08);
+
+  /* ---------- Semánticos Operativos (Paleta Grúas Londoño - Cero Azul) ---------- */
+  --gl-success: #16A34A;
+  --gl-success-strong: #15803D;
+  --gl-success-soft: #DCFCE7;
+  --gl-success-text: #166534;
+  --gl-danger: #D31826;
+  --gl-danger-strong: #B91C1C;
+  --gl-danger-soft: #FEE2E2;
+  --gl-warning: #D97706;
+  --gl-warning-strong: #B45309;
+  --gl-warning-soft: #FEF3C7;
+  --gl-info: #D31826;
+  --gl-info-strong: #991B1B;
+  --gl-info-soft: #FEE2E2;
+  --gl-whatsapp: #25D366;
+  --gl-whatsapp-strong: #128C7E;
+
+  /* ---------- Estados de la Máquina de Despacho (SICETAC FSM) ---------- */
+  --estado-pendiente-bg: #FEE2E2;
+  --estado-pendiente-text: #B91C1C;
+  --estado-pendiente-border: #D31826;
+  --estado-cotizada-bg: #EDE9FE;
+  --estado-cotizada-text: #6D28D9;
+  --estado-cotizada-border: #8B5CF6;
+  --estado-ruta-bg: #FEF3C7;
+  --estado-ruta-text: #B45309;
+  --estado-ruta-border: #F59E0B;
+  --estado-sitio-bg: #FFE4E6;
+  --estado-sitio-text: #9F1239;
+  --estado-sitio-border: #E11D48;
+  --estado-finalizada-bg: #DCFCE7;
+  --estado-finalizada-text: #15803D;
+  --estado-finalizada-border: #16A34A;
+  --estado-cancelada-bg: #F1F5F9;
+  --estado-cancelada-text: #475569;
+  --estado-cancelada-border: #94A3B8;
+
+  /* ---------- Modo Conductor (Alto contraste de carretera) ---------- */
+  --hc-bg: #0B111E;
+  --hc-surface: #141B2D;
+  --hc-surface-2: #1E283F;
+  --hc-border: rgba(255, 255, 255, 0.16);
+  --hc-text: #FFFFFF;
+  --hc-text-2: #CBD5E1;
+  --hc-accent: #D31826;
+  --hc-accent-strong: #B91C1C;
+  --hc-warning: #F59E0B;
+
+  /* ---------- Tipografía Fluida ---------- */
+  --gl-font: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --gl-font-brand: 'Plus Jakarta Sans', 'Montserrat', 'Inter', sans-serif;
+  --gl-font-mono: ui-monospace, 'Cascadia Code', 'SF Mono', Consolas, monospace;
+
+  --fs-xs: clamp(0.72rem, 0.7rem + 0.1vw, 0.78rem);
+  --fs-sm: clamp(0.82rem, 0.8rem + 0.15vw, 0.9rem);
+  --fs-base: clamp(0.94rem, 0.9rem + 0.2vw, 1rem);
+  --fs-lg: clamp(1.05rem, 1rem + 0.3vw, 1.15rem);
+  --fs-xl: clamp(1.22rem, 1.1rem + 0.5vw, 1.45rem);
+  --fs-2xl: clamp(1.45rem, 1.25rem + 1vw, 1.95rem);
+  --fs-3xl: clamp(1.85rem, 1.5rem + 1.8vw, 2.65rem);
+  --fs-4xl: clamp(2.3rem, 1.7rem + 3vw, 3.6rem);
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+  --fw-black: 900;
+
+  --lh-tight: 1.12;
+  --lh-snug: 1.28;
+  --lh-body: 1.58;
+  --tracking-tight: -0.025em;
+  --tracking-wide: 0.05em;
+
+  /* ---------- Espaciado Dinámico (Escala 4/8) ---------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --gap-fluid: clamp(12px, 2vw, 24px);
+  --section-pad: clamp(56px, 8vw, 96px);
+
+  /* ---------- Radios y Bordes Estilo Link-Belt / Grúas Londoño ---------- */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-2xl: 32px;
+  --r-pill: 9999px;               /* Para botones pill oficiales y chips */
+  --r-full: 9999px;               /* Alias estándar 100% redondeado */
+  --r-card: 26px;                 /* Radio exacto de tarjetas y modales */
+  --bw: 1px;
+  --bw-strong: 2px;
+
+  /* ---------- Sombras Suaves y Realistas ---------- */
+  --sh-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --sh-sm: 0 2px 4px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --sh-md: 0 8px 20px -4px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --sh-lg: 0 20px 40px -10px rgba(15, 23, 42, 0.14), 0 4px 10px -2px rgba(15, 23, 42, 0.06);
+  --sh-xl: 0 30px 60px -15px rgba(0, 0, 0, 0.25);
+  --sh-hanging-card: 0 25px 60px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  --sh-focus: 0 0 0 4px var(--gl-accent-ring);
+
+  /* ---------- Relieve Táctil de Botones Pill ---------- */
+  --relief: 2px;
+  --relief-hover: 3px;
+  --relief-press: 0px;
+
+  /* ---------- Capas (z-index) ---------- */
+  --z-base: 0;
+  --z-content: 10;
+  --z-float: 20;
+  --z-nav: 50;
+  --z-modal: 100;
+  --z-toast: 200;
+
+  /* ---------- Movimiento y Micro-interacciones ---------- */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 350ms;
+
+  /* ---------- Layout Fluido Proporcional ---------- */
+  --container: min(1560px, 94vw);
+  --container-nav: min(1640px, 96vw);
+  --nav-h: 76px;
+}
